@@ -4,7 +4,7 @@
 #include "commonFunction.h"
 
 class baseObject {
-private:
+protected:
 	SDL_Rect rectObject;
 	SDL_Texture* p_object;
 public:

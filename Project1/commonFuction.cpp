@@ -1,4 +1,4 @@
-﻿#include "commonFunction.h"
+﻿#include "CommonFunction.h"
 #include <iostream>
 
 void SDL_CF::initSDL(SDL_Window* &window, SDL_Renderer* &renderer) 

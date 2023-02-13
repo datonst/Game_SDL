@@ -1,4 +1,4 @@
-#include "baseObject.h"
+#include "BaseObject.h"
 
 baseObject::baseObject(){
 	rectObject.x=0;
