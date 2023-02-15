@@ -19,10 +19,6 @@ const int COLOR_KEY_B = 180;
 
 const std::string WINDOW_TITLE = "An Implementation of Code.org Painter";
 
-static SDL_Window* g_window = NULL;
-static SDL_Renderer* g_renderer = NULL;
-static SDL_Event g_even;
-
 
 namespace SDL_CF {
 	void initSDL(SDL_Window*& window, SDL_Renderer*& renderer);

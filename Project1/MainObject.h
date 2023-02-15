@@ -7,8 +7,8 @@
 const int WIDTH_FRAME = 480;
 const int HEIGHT_FRAME = 64;
 
-#define RUN_X 6
-#define RUN_Y 8
+#define RUN_X 1
+#define RUN_Y 1
 
 struct start {
 	int x;

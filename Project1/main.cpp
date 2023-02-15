@@ -7,6 +7,9 @@
 
 int main(int arc, char* argv[])
 {
+	SDL_Window* g_window = NULL;
+	SDL_Renderer* g_renderer = NULL;
+	SDL_Event g_even;
 
 	SDL_CF::initSDL(g_window, g_renderer);
 	SDL_Texture* background = SDL_CF::loadTexture("img//background.png", g_renderer);
