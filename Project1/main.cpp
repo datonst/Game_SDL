@@ -1,4 +1,4 @@
-// ConsoleApplication2.cpp : Defines the entry point for the console application.
+﻿// ConsoleApplication2.cpp : Defines the entry point for the console application.
 //
 
 #include "baseObject.h"
@@ -33,8 +33,14 @@ int main(int arc, char* argv[])
 
 		Map ga_map = tx.getMap();
 		tx.setMap(ga_map);
-		tx.drawTiles(g_renderer);
-		human.Renderer_mainO(tx.getMap(), g_renderer);
+
+		human.set_startMap(ga_map.start_x_, ga_map.start_y_);  //load vị trí của điểm bắt đầu của map vào human để xử lý.
+		human.Renderer_mainO(tx.getMap(), g_renderer);  // xử lý map và nhân vật đồng thời load image nhân vật.
+
+
+		tx.set_startMap_XY(human.get_startMap().x, human.get_startMap().y); // set lại vị trí sau khi thay đổi của điểm bắt đầu của map vào tile_map;
+		tx.drawTiles(g_renderer); 
+
 		SDL_RenderPresent(g_renderer);
 	}
 

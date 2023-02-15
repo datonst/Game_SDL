@@ -14,6 +14,9 @@ MainO::MainO() {
 	check.up = false;
 	check.right = false;
 	check.left = false;
+	start_map.x = 0;
+	start_map.y = 0;
+	left_mid = false;
 };
 
 void  MainO::set_clip() {
@@ -88,6 +91,7 @@ void MainO::move_mainO(SDL_Event event, SDL_Renderer* renderer_mainO) {
 
 
 void MainO::Renderer_mainO(const Map&  map_data,SDL_Renderer* renderer_mainO) {
+	runMap(map_data);
 	check_map(map_data);
 	if (clip_chay == true) {
 		clip_mainO = clip[index];
@@ -112,17 +116,17 @@ void MainO::UpdateImage(SDL_Renderer* renderer_mainO) {
 
 
 void MainO::check_map(const Map& map_data){
-	plus_y = RUN_Y;
+
 	int w_min = w_frame < TILE_SIZE ? w_frame : TILE_SIZE;
 	int h_min = h_frame < TILE_SIZE ? h_frame : TILE_SIZE;
 
 
 
 	//check horizontal
-	int x1=(rectObject.x+ plus_x)/TILE_SIZE;
-	int x2 = (rectObject.x + plus_x + w_frame -1) / TILE_SIZE;
-	int y1 = (rectObject.y) / TILE_SIZE;
-	int y2 = (rectObject.y + h_min - 1) / TILE_SIZE;
+	int x1 = (rectObject.x + start_map.x +plus_x) / TILE_SIZE;
+	int x2 = (rectObject.x + start_map.x + plus_x + w_frame -1) / TILE_SIZE;
+	int y1 = (rectObject.y+ start_map.y ) / TILE_SIZE;
+	int y2 = (rectObject.y+ start_map.y + h_min - 1) / TILE_SIZE;
 
 	if (x1 >= 0 && x2 < MAX_MAP_X && y1 >= 0 && y2 < MAX_MAP_Y) 
 	{
@@ -141,10 +145,10 @@ void MainO::check_map(const Map& map_data){
 	}
 
 	//check vertical
-	x1 = (rectObject.x) / TILE_SIZE;
-	x2 = (rectObject.x + w_min - 1) / TILE_SIZE;
-	y1 = (rectObject.y+ plus_y) / TILE_SIZE;
-	y2 = (rectObject.y + plus_y + h_frame - 1) / TILE_SIZE;
+	x1 = (rectObject.x+ start_map.x) / TILE_SIZE;
+	x2 = (rectObject.x + start_map.x + w_min - 1) / TILE_SIZE;
+	y1 = (rectObject.y+ start_map.y + plus_y) / TILE_SIZE;
+	y2 = (rectObject.y + start_map.y+ plus_y + h_frame - 1) / TILE_SIZE;
 
 	if (x1 >= 0 && x2 < MAX_MAP_X && y1 >= 0 && y2 < MAX_MAP_Y)
 	{
@@ -163,7 +167,29 @@ void MainO::check_map(const Map& map_data){
 			}
 		}
 	}
-
+	
 	rectObject.x += plus_x;
 	rectObject.y += plus_y;
+	
+}
+
+
+void MainO::runMap(const Map& map_data) {
+	if (rectObject.x < SCREEN_WIDTH / 3 && left_mid==true) rectObject.x = SCREEN_WIDTH / 3;  
+	else if (rectObject.x > 2*SCREEN_WIDTH / 3 && start_map.x != map_data.max_x_ - SCREEN_WIDTH) { rectObject.x = 2*SCREEN_WIDTH / 3; left_mid = true; }
+	
+	
+	if (start_map.x == 0) {
+		left_mid = false;
+
+	}
+	
+	if (check.right == true || check.left == true) {
+		start_map.x += plus_x;
+	}
+	
+	if (start_map.x < 0) start_map.x = 0;
+	if (rectObject.x < 0) rectObject.x = 0;
+	if (start_map.x + SCREEN_WIDTH >= map_data.max_x_) { start_map.x = map_data.max_x_ - SCREEN_WIDTH; }
+
 }

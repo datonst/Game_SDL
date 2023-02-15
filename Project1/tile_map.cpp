@@ -22,7 +22,7 @@ void gameMap::loadMap( const std::string name)
     {
         for (int j = 0; j < MAX_MAP_X; j++)
         {
-            sa>>game_map_.tile[i][j];
+            sa>>game_map_.tile[i][j];                           // Save data tile_map in file .data load in array_game_map.tile
             if (game_map_.tile[i][j] > 0)
             {
                 if (j > game_map_.max_x_)
@@ -39,8 +39,8 @@ void gameMap::loadMap( const std::string name)
     }
     sa.close();
 
-    game_map_.max_x_ = (game_map_.max_x_ + 1) * TILE_SIZE;
-    game_map_.max_y_ = (game_map_.max_y_ + 1) * TILE_SIZE;
+    game_map_.max_x_ = (game_map_.max_x_) * TILE_SIZE;
+    game_map_.max_y_ = (game_map_.max_y_) * TILE_SIZE;
 
     game_map_.start_x_ = game_map_.start_y_ = 0;
 
@@ -55,7 +55,7 @@ void gameMap::loadMapTiles(SDL_Renderer* screen)
         const std::string filename = "map//"+std::to_string(i) + ".png";
         std:: ifstream docfile (filename);
         if (!docfile) continue;
-        tile_map[i].loadTextureObject(filename, screen);
+        tile_map[i].loadTextureObject(filename, screen);   // load image corresponding  signal in  tile_map.tile
     }
 }
 
@@ -68,25 +68,24 @@ void gameMap::drawTiles(SDL_Renderer* des)
     int map_y = 0;
     int y1 = 0;
     int y2 = 0;
-
-    //map_x = game_map_.start_x_/TILE_SIZE;
+    map_x = game_map_.start_x_/TILE_SIZE;
     x1 = (game_map_.start_x_ % TILE_SIZE) * (-1) ;
     x2 = x1 + SCREEN_WIDTH + (x1 == 0 ? 0 : TILE_SIZE);
 
-    //map_y = game_map_.start_y_/TILE_SIZE;
+    map_y = game_map_.start_y_/TILE_SIZE;
     y1 = (game_map_.start_y_ % TILE_SIZE) * (-1);
     y2 = y1 + SCREEN_HEIGHT + (y1 == 0 ? 0 : TILE_SIZE);
 
     
     for (int i = y1; i < y2; i += TILE_SIZE)
     {
-        map_x = game_map_.start_x_ / TILE_SIZE;
+        map_x = game_map_.start_x_ / TILE_SIZE;  
         for (int j = x1; j < x2; j += TILE_SIZE)
         {
             if (game_map_.tile[map_y][map_x] != 0)
             {
-                tile_map[game_map_.tile[map_y][map_x]].setRectObject(j, i, TILE_SIZE, TILE_SIZE);
-                tile_map[game_map_.tile[map_y][map_x]].renderObject(des);
+                tile_map[game_map_.tile[map_y][map_x]].setRectObject(j, i, TILE_SIZE, TILE_SIZE);   // load image in location (j,i)
+                tile_map[game_map_.tile[map_y][map_x]].renderObject(des);               // print
             }
             map_x++;
         }

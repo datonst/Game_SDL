@@ -24,7 +24,7 @@ typedef struct Map
 	int start_y_;
 	int max_x_;
 	int max_y_;
-	int tile[MAX_MAP_Y][MAX_MAP_X];  // MAX_MAP_Y = 10, MAX_MAP_X = 400
+	int tile[MAX_MAP_Y][MAX_MAP_X];  // MAX_MAP_Y = 10, MAX_MAP_X = 400 -> Save array of tile_map
 	const char* file_name_;
 };
 
@@ -43,6 +43,7 @@ public:
 	void drawTiles(SDL_Renderer* screen);
 	Map getMap() const { return game_map_; }
 	void setMap(const Map& gMap) { game_map_ = gMap; }
+	void set_startMap_XY(const int& x, const int& y) { game_map_.start_x_ = x; game_map_.start_y_ = y; };
 };
 
 
