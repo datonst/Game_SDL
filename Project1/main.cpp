@@ -16,24 +16,25 @@ int main(int arc, char* argv[])
 	gameMap tx;
 	tx.loadMap("map//map01.dat");
 	tx.loadMapTiles(g_renderer);
-	
+
 	MainO human;
-	human.loadTextureObject("img//player_right.png",g_renderer);
+	human.loadTextureObject("img//player_right.png", g_renderer);
+	human.setRectObject(0,0, 60, 64);
 
 	bool is_quit = false;
 	while (!is_quit) {
+		SDL_RenderCopy(g_renderer, background, NULL, NULL);
 		while (SDL_PollEvent(&g_even) != 0) {
 			if (g_even.type == SDL_QUIT) {
 				is_quit = true;
 			}
-			human.move_mainO(g_even,g_renderer);
+			human.move_mainO(g_even, g_renderer);
 		}
 
 		Map ga_map = tx.getMap();
 		tx.setMap(ga_map);
 		tx.drawTiles(g_renderer);
-
-		human.Renderer_mainO(g_renderer);
+		human.Renderer_mainO(tx.getMap(), g_renderer);
 		SDL_RenderPresent(g_renderer);
 	}
 

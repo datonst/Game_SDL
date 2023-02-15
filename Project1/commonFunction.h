@@ -11,6 +11,12 @@
 const int SCREEN_WIDTH = 1200;
 const int SCREEN_HEIGHT = 600;
 const int SCREEN_BPP = 32;
+
+const int COLOR_KEY_R = 167;
+const int COLOR_KEY_G = 175;
+const int COLOR_KEY_B = 180;
+
+
 const std::string WINDOW_TITLE = "An Implementation of Code.org Painter";
 
 static SDL_Window* g_window = NULL;

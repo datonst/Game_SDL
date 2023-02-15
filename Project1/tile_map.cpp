@@ -85,7 +85,7 @@ void gameMap::drawTiles(SDL_Renderer* des)
         {
             if (game_map_.tile[map_y][map_x] != 0)
             {
-                tile_map[game_map_.tile[map_y][map_x]].setRectObject(j, i,64,64);
+                tile_map[game_map_.tile[map_y][map_x]].setRectObject(j, i, TILE_SIZE, TILE_SIZE);
                 tile_map[game_map_.tile[map_y][map_x]].renderObject(des);
             }
             map_x++;
