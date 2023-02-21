@@ -4,12 +4,14 @@
 #include "baseObject.h"
 #include "tile_map.h"
 #include "MainObject.h"
-
+#include "Timer.h"
 int main(int arc, char* argv[])
 {
 	SDL_Window* g_window = NULL;
 	SDL_Renderer* g_renderer = NULL;
 	SDL_Event g_even;
+	ImpTimer fps_time;
+
 
 	SDL_CF::initSDL(g_window, g_renderer);
 	SDL_Texture* background = SDL_CF::loadTexture("img//background.png", g_renderer);
@@ -26,6 +28,7 @@ int main(int arc, char* argv[])
 
 	bool is_quit = false;
 	while (!is_quit) {
+		fps_time.start();
 		SDL_RenderCopy(g_renderer, background, NULL, NULL);
 		while (SDL_PollEvent(&g_even) != 0) {
 			if (g_even.type == SDL_QUIT) {
@@ -34,6 +37,8 @@ int main(int arc, char* argv[])
 			human.move_mainO(g_even, g_renderer);
 		}
 
+
+		//process human and tile_map
 		Map ga_map = tx.getMap();
 		tx.setMap(ga_map);
 
@@ -45,6 +50,19 @@ int main(int arc, char* argv[])
 		tx.drawTiles(g_renderer); 
 
 		SDL_RenderPresent(g_renderer);
+
+		//process timer
+		int real_timer = fps_time.get_ticks();
+		int time_one_frame = 1000 / 25;
+		if (real_timer < time_one_frame) {
+			int delay = time_one_frame - real_timer;
+			if (delay > 0) {
+				SDL_Delay(delay);
+			}
+		}
+
+
+
 	}
 
 	SDL_CF::quitSDL(g_window, g_renderer);

@@ -18,7 +18,7 @@ public:
 
 
 
-typedef struct Map
+struct Map
 {
 	int start_x_;
 	int start_y_;

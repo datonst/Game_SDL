@@ -4,11 +4,12 @@
 
 #include "BaseObject.h"
 #include "tile_map.h"
+#include "Amo.h"
 const int WIDTH_FRAME = 480;
 const int HEIGHT_FRAME = 64;
 
-#define RUN_X 1
-#define RUN_Y 1
+#define RUN_X 10
+#define RUN_Y 3
 
 struct start {
 	int x;
@@ -23,6 +24,7 @@ struct bottom {
 };
 class MainO : public baseObject {
 private:
+	bool on_ground;
 	bool clip_chay;
 	int plus_x;
 	int plus_y;
@@ -32,6 +34,8 @@ private:
 	bottom check;
 	start start_map;
 	bool left_mid;
+	int come_back_time;
+
 public:
 	MainO();
 	~MainO();

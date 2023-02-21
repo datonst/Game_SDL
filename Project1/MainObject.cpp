@@ -17,6 +17,8 @@ MainO::MainO() {
 	start_map.x = 0;
 	start_map.y = 0;
 	left_mid = false;
+	on_ground = false;
+	come_back_time = 0;
 };
 
 void  MainO::set_clip() {
@@ -92,6 +94,7 @@ void MainO::move_mainO(SDL_Event event, SDL_Renderer* renderer_mainO) {
 
 void MainO::Renderer_mainO(const Map&  map_data,SDL_Renderer* renderer_mainO) {
 	check_map(map_data);
+	if (come_back_time != 0) return;    // When drop pause load image;
 	if (clip_chay == true) {
 		clip_mainO = clip[index];
 		index++;
@@ -115,9 +118,15 @@ void MainO::UpdateImage(SDL_Renderer* renderer_mainO) {
 
 
 void MainO::check_map(const Map& map_data){
-
+	if (come_back_time >0) {
+		come_back_time -= 2;
+		if (come_back_time == 0) {
+			rectObject.x -=4*TILE_SIZE;
+			rectObject.y = 0;
+		}
+		return;
+	}
 	plus_y += RUN_Y;
-
 	int w_min = w_frame < TILE_SIZE ? w_frame : TILE_SIZE;
 	int h_min = h_frame < TILE_SIZE ? h_frame : TILE_SIZE;
 
@@ -125,9 +134,22 @@ void MainO::check_map(const Map& map_data){
 
 	//check horizontal
 	int x1 = (rectObject.x + start_map.x + plus_x) / TILE_SIZE;
-	int x2 = (rectObject.x + start_map.x + plus_x + w_frame -1) / TILE_SIZE;
+	int x2 = (rectObject.x + start_map.x + plus_x + w_frame -1 ) / TILE_SIZE;
 	int y1 = (rectObject.y+ start_map.y ) / TILE_SIZE;
-	int y2 = (rectObject.y+ start_map.y + h_min - 1) / TILE_SIZE;
+	int y2 = (rectObject.y+ start_map.y + h_min -1 ) / TILE_SIZE;
+
+
+	if ((check.right == true || check.left == true)) {
+		if (check.up == true && on_ground == true) {
+			plus_y += -RUN_Y * 20;
+			check.up = false;
+			on_ground = false;
+		}
+		else plus_y += RUN_Y;
+		
+	}
+
+
 
 	if (x1 >= 0 && x2 < MAX_MAP_X && y1 >= 0 && y2 < MAX_MAP_Y) 
 	{
@@ -135,21 +157,23 @@ void MainO::check_map(const Map& map_data){
 			if (map_data.tile[y1][x2] != 0 || map_data.tile[y2][x2] != 0) {
 				check.right = false;
 				plus_x = 0;
+
 			}
 		}
 		else if (plus_x < 0) {
 			if (map_data.tile[y1][x1] != 0 || map_data.tile[y2][x1] != 0) {
 				check.left = false;
 				plus_x = 0;
+
 			}
 		}
 	}
 
 	//check vertical
 	x1 = (rectObject.x+ start_map.x) / TILE_SIZE;
-	x2 = (rectObject.x + start_map.x + w_min - 1) / TILE_SIZE;
+	x2 = (rectObject.x + start_map.x + w_min ) / TILE_SIZE;
 	y1 = (rectObject.y+ start_map.y + plus_y) / TILE_SIZE;
-	y2 = (rectObject.y + start_map.y+ plus_y + h_frame - 1) / TILE_SIZE;
+	y2 = (rectObject.y + start_map.y + plus_y + h_frame ) / TILE_SIZE;
 
 	if (x1 >= 0 && x2 < MAX_MAP_X && y1 >= 0 && y2 < MAX_MAP_Y)
 	{
@@ -158,6 +182,7 @@ void MainO::check_map(const Map& map_data){
 			if (map_data.tile[y1][x1] != 0 || map_data.tile[y1][x2] != 0) {
 				check.up = false;
 				plus_y = 0;
+				on_ground = true;
 			}
 		}
 
@@ -165,13 +190,20 @@ void MainO::check_map(const Map& map_data){
 			if (map_data.tile[y2][x1] != 0 || map_data.tile[y2][x2] != 0) {
 				check.down = false;
 				plus_y = 0;
+				on_ground = true;
 			}
 		}
 	}
-	start_map.x += plus_x*10;
+	if (rectObject.y < 0) plus_y += RUN_Y;
+
+	start_map.x += plus_x;
 	runMap(map_data);
 	rectObject.x += plus_x;
 	rectObject.y += plus_y;
+	if (rectObject.y > map_data.max_y_) {
+		come_back_time = 60;
+	}
+
 }
 
 

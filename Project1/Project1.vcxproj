@@ -132,17 +132,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Amo.cpp" />
     <ClCompile Include="BaseObject.cpp" />
     <ClCompile Include="CommonFuction.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainObject.cpp" />
     <ClCompile Include="tile_map.cpp" />
+    <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Amo.h" />
     <ClInclude Include="BaseObject.h" />
     <ClInclude Include="CommonFunction.h" />
     <ClInclude Include="MainObject.h" />
     <ClInclude Include="tile_map.h" />
+    <ClInclude Include="Timer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
