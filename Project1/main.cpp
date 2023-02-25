@@ -43,12 +43,12 @@ int main(int arc, char* argv[])
 		tx.setMap(ga_map);
 
 		human.set_startMap(ga_map.start_x_, ga_map.start_y_);  //load vị trí của điểm bắt đầu của map vào human để xử lý.
-		human.Renderer_mainO(tx.getMap(), g_renderer);  // xử lý map và nhân vật đồng thời load image nhân vật.
+		human.Renderer_mainO(ga_map, g_renderer);  // xử lý map và nhân vật đồng thời load image nhân vật.
 
 
+		tx.setMap(ga_map);
 		tx.set_startMap_XY(human.get_startMap().x, human.get_startMap().y); // set lại vị trí sau khi thay đổi của điểm bắt đầu của map vào tile_map;
 		tx.drawTiles(g_renderer); 
-
 		SDL_RenderPresent(g_renderer);
 
 		//process timer
@@ -60,8 +60,6 @@ int main(int arc, char* argv[])
 				SDL_Delay(delay);
 			}
 		}
-
-
 
 	}
 

@@ -4,7 +4,8 @@
 #include <fstream>
 gameMap::gameMap()
 {
-    ;
+    game_map_.start_x_=0;
+    game_map_.start_y_ = 0;
 }
 
 gameMap::~gameMap()

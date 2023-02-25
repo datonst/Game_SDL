@@ -19,6 +19,7 @@ MainO::MainO() {
 	left_mid = false;
 	on_ground = false;
 	come_back_time = 0;
+	dan_left = false;
 };
 
 void  MainO::set_clip() {
@@ -33,7 +34,8 @@ void  MainO::set_clip() {
 MainO::~MainO() { ; };
 
 
-void MainO::move_mainO(SDL_Event event, SDL_Renderer* renderer_mainO) {
+void MainO::move_mainO(SDL_Event &event, SDL_Renderer* renderer_mainO) {
+	
 	if (event.type == SDL_KEYDOWN) {
 		switch (event.key.keysym.sym) {
 		case SDLK_DOWN:
@@ -48,12 +50,14 @@ void MainO::move_mainO(SDL_Event event, SDL_Renderer* renderer_mainO) {
 			break;
 
 		case SDLK_LEFT:
+			dan_left = true;
 			check.left = true;
 			check.right = false;
 			clip_chay = true;
 			plus_x = -abs(RUN_X);
 			break;
 		case SDLK_RIGHT:
+			dan_left = false;
 			check.right= true;
 			check.left = false;
 			clip_chay = true;
@@ -73,6 +77,7 @@ void MainO::move_mainO(SDL_Event event, SDL_Renderer* renderer_mainO) {
 			plus_y = 0;
 			break;
 		case SDLK_LEFT:
+			dan_left = true;
 			check.left = false;
 			clip_mainO.x = 0;
 			clip_chay = false;
@@ -80,6 +85,7 @@ void MainO::move_mainO(SDL_Event event, SDL_Renderer* renderer_mainO) {
 			loadTextureObject("img//player_left.png", renderer_mainO);
 			break;
 		case SDLK_RIGHT:
+			dan_left = false;
 			check.right = false;
 			clip_mainO.x = 0;
 			clip_chay = false;
@@ -88,12 +94,40 @@ void MainO::move_mainO(SDL_Event event, SDL_Renderer* renderer_mainO) {
 			break;
 		}
 	}
+	else if (event.type == SDL_MOUSEBUTTONDOWN) {
+		Amop* dan = new Amop();
+		switch (event.button.button) {
+		case SDL_BUTTON_LEFT:
+		{
+			dan->set_W_H(W_Laser, H_Laser);
+			dan->loadTextureObject("img//player_bullet.png", renderer_mainO);
+			break;
+		}
+		case SDL_BUTTON_RIGHT:
+		{
+			dan->set_W_H(W_Sphere, H_Sphere);
+			dan->loadTextureObject("img//player_bullet1.png", renderer_mainO);
+			break;
+		}
+		}
+		dan->set_is_move(true);
+		int dan_locate_x = 0;
+		if (dan_left == true) dan_locate_x = -6;
+		else dan_locate_x = 60;
+		dan->set_X_Y(this->rectObject.x +dan_locate_x , this->rectObject.y+20);
+		dan->left_or_right(dan_left);
+		p_amo.push_back(dan);
+	}
+	else if (event.type == SDL_MOUSEBUTTONUP) {
+		;
+	}
 	UpdateImage(renderer_mainO);
 };
 
 
-void MainO::Renderer_mainO(const Map&  map_data,SDL_Renderer* renderer_mainO) {
-	check_map(map_data);
+void MainO::Renderer_mainO(Map&  map_data,SDL_Renderer* renderer_mainO) {
+	ShowAmo(renderer_mainO);
+	change_map(map_data);
 	if (come_back_time != 0) return;    // When drop pause load image;
 	if (clip_chay == true) {
 		clip_mainO = clip[index];
@@ -114,10 +148,11 @@ void MainO::UpdateImage(SDL_Renderer* renderer_mainO) {
 		if (check.up == true) ret = loadTextureObject("img//jum_left.png", renderer_mainO);
 		else ret = loadTextureObject("img//player_left.png", renderer_mainO);
 	}
+	
 }
 
 
-void MainO::check_map(const Map& map_data){
+void MainO::change_map(Map& map_data){
 	if (come_back_time >0) {
 		come_back_time -= 2;
 		if (come_back_time == 0) {
@@ -138,22 +173,21 @@ void MainO::check_map(const Map& map_data){
 	int y1 = (rectObject.y+ start_map.y ) / TILE_SIZE;
 	int y2 = (rectObject.y+ start_map.y + h_min -1 ) / TILE_SIZE;
 
-
-	if ((check.right == true || check.left == true)) {
-		if (check.up == true && on_ground == true) {
-			plus_y += -RUN_Y * 20;
-			check.up = false;
-			on_ground = false;
-		}
-		else plus_y += RUN_Y;
-		
+	if (check.up == true && on_ground == true) {
+		plus_y += -RUN_Y * 20;
+		check.up = false;
+		on_ground = false;
 	}
+	else plus_y += RUN_Y;
 
 
 
 	if (x1 >= 0 && x2 < MAX_MAP_X && y1 >= 0 && y2 < MAX_MAP_Y) 
 	{
+
 		if (plus_x>0) {
+			if (map_data.tile[y1][x2] == STATE_MONEY) { map_data.tile[y1][x2] = 0; }
+			if (map_data.tile[y2][x2] == STATE_MONEY) { map_data.tile[y2][x2] = 0; }
 			if (map_data.tile[y1][x2] != 0 || map_data.tile[y2][x2] != 0) {
 				check.right = false;
 				plus_x = 0;
@@ -161,6 +195,8 @@ void MainO::check_map(const Map& map_data){
 			}
 		}
 		else if (plus_x < 0) {
+			if (map_data.tile[y1][x1] == STATE_MONEY) { map_data.tile[y1][x1] = 0; }
+			if (map_data.tile[y2][x1] == STATE_MONEY) { map_data.tile[y2][x1] = 0; }
 			if (map_data.tile[y1][x1] != 0 || map_data.tile[y2][x1] != 0) {
 				check.left = false;
 				plus_x = 0;
@@ -179,6 +215,8 @@ void MainO::check_map(const Map& map_data){
 	{
 
 		if (plus_y<0) {
+			if (map_data.tile[y1][x1] == STATE_MONEY) { map_data.tile[y1][x1] = 0; }
+			if (map_data.tile[y1][x2] == STATE_MONEY) { map_data.tile[y1][x2] = 0; }
 			if (map_data.tile[y1][x1] != 0 || map_data.tile[y1][x2] != 0) {
 				check.up = false;
 				plus_y = 0;
@@ -187,6 +225,8 @@ void MainO::check_map(const Map& map_data){
 		}
 
 		else if (plus_y >0) {
+			if (map_data.tile[y2][x1] == STATE_MONEY) { map_data.tile[y2][x1] = 0; }
+			if (map_data.tile[y2][x2] == STATE_MONEY) { map_data.tile[y2][x2] = 0; }
 			if (map_data.tile[y2][x1] != 0 || map_data.tile[y2][x2] != 0) {
 				check.down = false;
 				plus_y = 0;
@@ -220,4 +260,24 @@ void MainO::runMap(const Map& map_data) {
 	if (rectObject.x < 0) rectObject.x = 0;
 	if (start_map.x + SCREEN_WIDTH >= map_data.max_x_) { start_map.x = map_data.max_x_ - SCREEN_WIDTH; }
 
+}
+
+
+void MainO :: ShowAmo(SDL_Renderer* renderer_mainO) {
+	for (int i = 0; i < GetlistAmop().size(); i++) {
+		std::vector<Amop*> v = GetlistAmop();
+		Amop* doc = v.at(i);
+		if (doc == NULL) continue;
+		if (doc->get_is_move()) {
+			doc->renderObject(renderer_mainO);
+			doc->Handle_MM(SCREEN_WIDTH, SCREEN_HEIGHT);
+		}
+		else {
+			v.erase(v.begin() + i);
+			set_list(v);
+			delete doc;
+			doc = NULL;
+		}
+		v.clear();
+	}
 }

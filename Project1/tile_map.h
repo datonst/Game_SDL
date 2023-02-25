@@ -41,7 +41,7 @@ public:
 	void loadMap(const std::string name);
 	void loadMapTiles(SDL_Renderer* screen);
 	void drawTiles(SDL_Renderer* screen);
-	Map getMap() const { return game_map_; }
+	Map getMap()  { return game_map_; }
 	void setMap(const Map& gMap) { game_map_ = gMap; }
 	void set_startMap_XY(const int& x, const int& y) { game_map_.start_x_ = x; game_map_.start_y_ = y; };
 };

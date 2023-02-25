@@ -14,7 +14,7 @@ private:
 	int x_vall, y_vall;
 	bool is_move;
 	unsigned int amo_type;
-
+	int SPEED_GUN;
 public:
 	enum AmoType {
 		NONE,
@@ -29,6 +29,10 @@ public:
 	bool get_is_move() const { return is_move; }
 	void set_W_H(int const& w, int const& h) { rectObject.w = w; rectObject.h = h; }
 	void set_X_Y(int const& x, int const& y) { rectObject.x = x; rectObject.y = y; }
+	void left_or_right(bool const& x) {
+		if (x == true) SPEED_GUN = -50;
+		else SPEED_GUN = 50;
+	}
 
 };
 
