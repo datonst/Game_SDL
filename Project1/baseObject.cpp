@@ -1,5 +1,5 @@
-#include "BaseObject.h"
-
+﻿#include "BaseObject.h"
+#include <iostream>
 baseObject::baseObject(){
 	rectObject.x=0;
 	rectObject.y=0;
@@ -12,9 +12,10 @@ baseObject::~baseObject(){
 	freeObject();
 }
 
-bool baseObject::loadTextureObject (const std::string& path, SDL_Renderer* renderer){
-	p_object= SDL_CF::loadTexture(path,renderer);
-	return p_object!=NULL;
+
+bool baseObject::loadTextureObject(const std::string& path, SDL_Renderer* renderer) {
+	p_object = SDL_CF::loadTexture(path, renderer, COLOR_KEY_R, COLOR_KEY_G, COLOR_KEY_B);
+	return p_object != NULL;
 }
 
 void baseObject::renderObject(SDL_Renderer *des,const SDL_Rect* clip /* =NULL*/){

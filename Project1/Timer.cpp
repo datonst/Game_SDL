@@ -1,5 +1,5 @@
 #include "Timer.h"
-
+#include<SDL.h>
 
 ImpTimer::ImpTimer()
 {

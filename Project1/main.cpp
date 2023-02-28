@@ -1,12 +1,13 @@
-﻿// ConsoleApplication2.cpp : Defines the entry point for the console application.
-//
-
-#include "baseObject.h"
+﻿#include "baseObject.h"
 #include "tile_map.h"
 #include "MainObject.h"
 #include "Timer.h"
+#include "ThreatObject.h"
 int main(int arc, char* argv[])
 {
+	int COLOR_KEY_R = 167;
+	int COLOR_KEY_G = 175;
+	int COLOR_KEY_B = 180;	
 	SDL_Window* g_window = NULL;
 	SDL_Renderer* g_renderer = NULL;
 	SDL_Event g_even;
@@ -14,7 +15,7 @@ int main(int arc, char* argv[])
 
 
 	SDL_CF::initSDL(g_window, g_renderer);
-	SDL_Texture* background = SDL_CF::loadTexture("img//background.png", g_renderer);
+	SDL_Texture* background = SDL_CF::loadTexture("img//background.png", g_renderer, COLOR_KEY_R, COLOR_KEY_G, COLOR_KEY_B);
 	SDL_RenderCopy(g_renderer, background, NULL, NULL);
 
 
@@ -24,7 +25,21 @@ int main(int arc, char* argv[])
 
 	MainO human;
 	human.loadTextureObject("img//player_right.png", g_renderer);
-	human.setRectObject(0,0, 60, 64);
+	human.setRectObject(0, 0, 60, 64);
+
+	std::vector<threatObject*> list_vat_can;
+	threatObject* vat_can;
+	for (int i = 1; i <8; i++) {
+		vat_can = new threatObject();
+		bool t = vat_can->loadTextureObject("img//threat_left.png", g_renderer);
+		if (t == NULL) continue;
+		vat_can->set_W_H(WIDTH_THREAT / 8, HEIGTH_THREAT);
+		vat_can->set_X_Y(1500 * i - 840, 100);
+		vat_can->set_dan_threat(g_renderer);
+		list_vat_can.push_back(vat_can);
+	}
+
+
 
 	bool is_quit = false;
 	while (!is_quit) {
@@ -48,7 +63,22 @@ int main(int arc, char* argv[])
 
 		tx.setMap(ga_map);
 		tx.set_startMap_XY(human.get_startMap().x, human.get_startMap().y); // set lại vị trí sau khi thay đổi của điểm bắt đầu của map vào tile_map;
-		tx.drawTiles(g_renderer); 
+		tx.drawTiles(g_renderer);
+
+
+		for (int i = 0; i < list_vat_can.size(); i++) {
+			list_vat_can.at(i)->set_startMap(ga_map.start_x_, ga_map.start_y_);
+			list_vat_can.at(i)->Handle_M_T(0, 0);
+			if (list_vat_can.at(i)->dan_T_list().at(0)->getRectObject().x >0 && human.getRectObject().x >= list_vat_can.at(i)->getRectObject().x) {
+				list_vat_can.at(i)->set_is_reset(false);
+				continue;
+			}
+			list_vat_can.at(i)->set_is_reset(true);
+			baseObject* doc = list_vat_can.at(i)->dan_T_list().at(0);
+			doc->renderObject(g_renderer);
+			list_vat_can.at(i)->Renderer_threatO(ga_map, g_renderer);
+		}
+
 		SDL_RenderPresent(g_renderer);
 
 		//process timer
@@ -60,7 +90,6 @@ int main(int arc, char* argv[])
 				SDL_Delay(delay);
 			}
 		}
-
 	}
 
 	SDL_CF::quitSDL(g_window, g_renderer);
@@ -70,4 +99,3 @@ int main(int arc, char* argv[])
 	return 0;
 }
 #undef main
-

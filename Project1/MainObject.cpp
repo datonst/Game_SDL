@@ -3,8 +3,8 @@
 MainO::MainO() {
 	clip_mainO.x = 0;
 	clip_mainO.y = 0;
-	clip_mainO.w= 60;
-	clip_mainO.h = 64;
+	clip_mainO.w= WIDTH_FRAME/8;
+	clip_mainO.h = HEIGHT_FRAME;
 	clip_chay = false;
 	plus_x = 0;
 	plus_y = RUN_Y;
@@ -20,6 +20,9 @@ MainO::MainO() {
 	on_ground = false;
 	come_back_time = 0;
 	dan_left = false;
+	COLOR_KEY_R = 255;
+	COLOR_KEY_G = 255;
+	COLOR_KEY_B = 255;
 };
 
 void  MainO::set_clip() {
@@ -128,6 +131,7 @@ void MainO::move_mainO(SDL_Event &event, SDL_Renderer* renderer_mainO) {
 void MainO::Renderer_mainO(Map&  map_data,SDL_Renderer* renderer_mainO) {
 	ShowAmo(renderer_mainO);
 	change_map(map_data);
+
 	if (come_back_time != 0) return;    // When drop pause load image;
 	if (clip_chay == true) {
 		clip_mainO = clip[index];
@@ -153,6 +157,7 @@ void MainO::UpdateImage(SDL_Renderer* renderer_mainO) {
 
 
 void MainO::change_map(Map& map_data){
+
 	if (come_back_time >0) {
 		come_back_time -= 2;
 		if (come_back_time == 0) {
@@ -243,13 +248,13 @@ void MainO::change_map(Map& map_data){
 	if (rectObject.y > map_data.max_y_) {
 		come_back_time = 60;
 	}
-
 }
 
 
 void MainO::runMap(const Map& map_data) {
-	if (rectObject.x < SCREEN_WIDTH / 3 && left_mid==true) rectObject.x = SCREEN_WIDTH / 3;  
-	else if (rectObject.x > 2 * SCREEN_WIDTH / 3 && start_map.x < map_data.max_x_ - SCREEN_WIDTH) { rectObject.x = 2 * SCREEN_WIDTH / 3; left_mid = true; }
+	
+	if (rectObject.x < SDL_CF::SCREEN_WIDTH / 3 && left_mid==true) rectObject.x = SDL_CF::SCREEN_WIDTH / 3;
+	else if (rectObject.x > 2 * SDL_CF::SCREEN_WIDTH / 3 && start_map.x < map_data.max_x_ - SDL_CF::SCREEN_WIDTH) { rectObject.x = 2 * SDL_CF::SCREEN_WIDTH / 3; left_mid = true; }
 	
 	
 	if (start_map.x == 0) {
@@ -258,8 +263,10 @@ void MainO::runMap(const Map& map_data) {
 
 	if (start_map.x < 0) start_map.x = 0;
 	if (rectObject.x < 0) rectObject.x = 0;
-	if (start_map.x + SCREEN_WIDTH >= map_data.max_x_) { start_map.x = map_data.max_x_ - SCREEN_WIDTH; }
 
+	if (start_map.x + SDL_CF::SCREEN_WIDTH >= map_data.max_x_) {
+		start_map.x = map_data.max_x_ - SDL_CF::SCREEN_WIDTH;
+	}
 }
 
 
@@ -270,7 +277,7 @@ void MainO :: ShowAmo(SDL_Renderer* renderer_mainO) {
 		if (doc == NULL) continue;
 		if (doc->get_is_move()) {
 			doc->renderObject(renderer_mainO);
-			doc->Handle_MM(SCREEN_WIDTH, SCREEN_HEIGHT);
+			doc->Handle_MM(SDL_CF::SCREEN_WIDTH, SDL_CF::SCREEN_HEIGHT);
 		}
 		else {
 			v.erase(v.begin() + i);

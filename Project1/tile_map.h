@@ -4,19 +4,20 @@
 #define TILE_MAP_H
 #include "baseObject.h"
 #define TILE_SIZE 64
-static const int w_frame = 60;
-static const int h_frame = 64;
-static const int MAX_MAP_X = 400;
+#define STATE_MONEY 7
+static const int MAX_MAP_X = 206;
 static const int MAX_MAP_Y = 10;
-static const int MAX_TILES = 20;
+static const int MAX_TILES = 23;
 
 class TileMap : public baseObject {
 public:
 	TileMap() { ; };
 	~TileMap() { ; };
 };
-
-
+struct start {
+	int x;
+	int y;
+};
 
 struct Map
 {

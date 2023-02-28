@@ -7,6 +7,9 @@ class baseObject {
 protected:
 	SDL_Rect rectObject;
 	SDL_Texture* p_object;
+	int COLOR_KEY_R = 167;
+	int COLOR_KEY_G = 175;
+	int COLOR_KEY_B = 180;
 public:
 	baseObject();
 	~baseObject();
@@ -18,6 +21,7 @@ public:
 	void set_p_object(SDL_Texture* p_object_) { p_object = p_object_; };
 	SDL_Texture* get_p_object() const { return p_object; }
 	void freeObject();
+
 };
 
 #endif

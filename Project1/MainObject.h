@@ -6,17 +6,12 @@
 #include "tile_map.h"
 #include "Amo.h"
 #include <vector>
-const int WIDTH_FRAME = 480;
-const int HEIGHT_FRAME = 64;
+
 
 #define RUN_X 10
 #define RUN_Y 3
-#define STATE_MONEY 4
 
-struct start {
-	int x;
-	int y;
-};
+
 
 struct bottom {
 	bool left = false;
@@ -39,6 +34,10 @@ private:
 	int come_back_time;
 	std::vector<Amop*> p_amo;
 	bool dan_left;
+	const int WIDTH_FRAME = 480;
+	const int HEIGHT_FRAME = 64;
+	const int w_frame = WIDTH_FRAME/8;
+	const int h_frame = 64;
 public:
 	MainO();
 	~MainO();
@@ -51,6 +50,7 @@ public:
 	start get_startMap() const { return start_map; }
 	void set_startMap(const int&x, const int &y) { start_map.x = x; start_map.y = y; }
 
+	
 	std::vector<Amop*> GetlistAmop() const { return p_amo; }
 	void ShowAmo(SDL_Renderer* renderer_mainO);
 	void set_list(std::vector<Amop*> x) { p_amo = x; };

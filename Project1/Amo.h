@@ -2,13 +2,11 @@
 #ifndef AMM_
 #define AMM_
 
-#include "baseObject.h"
-
+#include "BaseObject.h"
 #define W_Laser 35
 #define H_Laser 5
 #define W_Sphere 10
 #define H_Sphere 10
-
 class Amop : public baseObject {
 private:
 	int x_vall, y_vall;

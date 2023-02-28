@@ -1,6 +1,8 @@
 ﻿#include "CommonFunction.h"
 #include <iostream>
 
+
+
 void SDL_CF::initSDL(SDL_Window*& window, SDL_Renderer*& renderer)
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
@@ -63,7 +65,7 @@ void SDL_CF::quitSDL(SDL_Window* window, SDL_Renderer* renderer)
 	SDL_Quit();
 }
 
-SDL_Texture* SDL_CF::loadTexture(const std::string& path, SDL_Renderer* renderer) {
+SDL_Texture* SDL_CF::loadTexture(const std::string& path, SDL_Renderer* renderer, const int& COLOR_KEY_R, const int& COLOR_KEY_G, const int& COLOR_KEY_B) {
 	SDL_Texture* newTexture = nullptr;
 	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
 

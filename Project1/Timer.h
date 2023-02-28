@@ -2,7 +2,6 @@
 #ifndef Timer_
 #define TImer_
 #include <iostream>
-#include "CommonFunction.h"
 class ImpTimer
 {
 public:
