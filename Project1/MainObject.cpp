@@ -114,24 +114,26 @@ void MainO::move_mainO(SDL_Event &event, SDL_Renderer* renderer_mainO) {
 		}
 		}
 		dan->set_is_move(true);
+		dan->left_or_right(dan_left);
 		int dan_locate_x = 0;
 		if (dan_left == true) dan_locate_x = -6;
 		else dan_locate_x = 60;
 		dan->set_X_Y(this->rectObject.x +dan_locate_x , this->rectObject.y+20);
-		dan->left_or_right(dan_left);
+		dan->set_startMap_amo(start_map.x, start_map.y);
 		p_amo.push_back(dan);
 	}
 	else if (event.type == SDL_MOUSEBUTTONUP) {
 		;
 	}
+	
 	UpdateImage(renderer_mainO);
 };
 
 
 void MainO::Renderer_mainO(Map&  map_data,SDL_Renderer* renderer_mainO) {
-	ShowAmo(renderer_mainO);
+	
 	change_map(map_data);
-
+	ShowAmo(map_data, renderer_mainO);
 	if (come_back_time != 0) return;    // When drop pause load image;
 	if (clip_chay == true) {
 		clip_mainO = clip[index];
@@ -243,6 +245,7 @@ void MainO::change_map(Map& map_data){
 
 	start_map.x += plus_x;
 	runMap(map_data);
+
 	rectObject.x += plus_x;
 	rectObject.y += plus_y;
 	if (rectObject.y > map_data.max_y_) {
@@ -255,8 +258,6 @@ void MainO::runMap(const Map& map_data) {
 	
 	if (rectObject.x < SDL_CF::SCREEN_WIDTH / 3 && left_mid==true) rectObject.x = SDL_CF::SCREEN_WIDTH / 3;
 	else if (rectObject.x > 2 * SDL_CF::SCREEN_WIDTH / 3 && start_map.x < map_data.max_x_ - SDL_CF::SCREEN_WIDTH) { rectObject.x = 2 * SDL_CF::SCREEN_WIDTH / 3; left_mid = true; }
-	
-	
 	if (start_map.x == 0) {
 		left_mid = false;
 	}
@@ -270,14 +271,15 @@ void MainO::runMap(const Map& map_data) {
 }
 
 
-void MainO :: ShowAmo(SDL_Renderer* renderer_mainO) {
+void MainO :: ShowAmo(Map& map_data,SDL_Renderer* renderer_mainO) {
 	for (int i = 0; i < GetlistAmop().size(); i++) {
 		std::vector<Amop*> v = GetlistAmop();
 		Amop* doc = v.at(i);
 		if (doc == NULL) continue;
+		doc->change_map_amo(map_data);
+		doc->Handle_MM(SDL_CF::SCREEN_WIDTH, SDL_CF::SCREEN_HEIGHT);
 		if (doc->get_is_move()) {
 			doc->renderObject(renderer_mainO);
-			doc->Handle_MM(SDL_CF::SCREEN_WIDTH, SDL_CF::SCREEN_HEIGHT);
 		}
 		else {
 			v.erase(v.begin() + i);

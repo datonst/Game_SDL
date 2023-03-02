@@ -3,11 +3,12 @@
 #include "MainObject.h"
 #include "Timer.h"
 #include "ThreatObject.h"
+
 int main(int arc, char* argv[])
 {
 	int COLOR_KEY_R = 167;
 	int COLOR_KEY_G = 175;
-	int COLOR_KEY_B = 180;	
+	int COLOR_KEY_B = 180;
 	SDL_Window* g_window = NULL;
 	SDL_Renderer* g_renderer = NULL;
 	SDL_Event g_even;
@@ -29,7 +30,7 @@ int main(int arc, char* argv[])
 
 	std::vector<threatObject*> list_vat_can;
 	threatObject* vat_can;
-	for (int i = 1; i <8; i++) {
+	for (int i = 1; i < 8; i++) {
 		vat_can = new threatObject();
 		bool t = vat_can->loadTextureObject("img//threat_left.png", g_renderer);
 		if (t == NULL) continue;
@@ -66,17 +67,29 @@ int main(int arc, char* argv[])
 		tx.drawTiles(g_renderer);
 
 
+		//check threat_object with main_object
 		for (int i = 0; i < list_vat_can.size(); i++) {
 			list_vat_can.at(i)->set_startMap(ga_map.start_x_, ga_map.start_y_);
-			list_vat_can.at(i)->Handle_M_T(0, 0);
-			if (list_vat_can.at(i)->dan_T_list().at(0)->getRectObject().x >0 && human.getRectObject().x >= list_vat_can.at(i)->getRectObject().x) {
-				list_vat_can.at(i)->set_is_reset(false);
-				continue;
-			}
-			list_vat_can.at(i)->set_is_reset(true);
-			baseObject* doc = list_vat_can.at(i)->dan_T_list().at(0);
-			doc->renderObject(g_renderer);
 			list_vat_can.at(i)->Renderer_threatO(ga_map, g_renderer);
+			//check can_can crash human
+			if (SDL_CF::is_crash(list_vat_can.at(i)->getRectObject(), human.getRectObject()) == true) {
+				delete list_vat_can.at(i);
+				list_vat_can.at(i) = NULL;
+				list_vat_can.erase(list_vat_can.begin() + i);
+			}
+			//check vat_can_amo to human
+			if (SDL_CF::is_crash(list_vat_can.at(i)->dan_T_one()->getRectObject(), human.getRectObject()) == true){
+				list_vat_can.at(i)->dan_T_one()->setRectObject(0, 0, 0, 0);
+			}
+			// check human_amo to vat_can
+			for (int j = 0; j < human.GetlistAmop().size(); j++) {   
+				if(list_vat_can.size() == 0) break;
+				if (SDL_CF::is_crash(list_vat_can.at(i)->getRectObject(), human.GetlistAmop().at(j)->getRectObject())) {
+					delete list_vat_can.at(i);
+					list_vat_can.at(i) = NULL;
+					list_vat_can.erase(list_vat_can.begin() + i);
+				}
+			}
 		}
 
 		SDL_RenderPresent(g_renderer);

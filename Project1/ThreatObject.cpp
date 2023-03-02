@@ -24,6 +24,7 @@ threatObject::threatObject() {
 	on_ground = false;
 	check_go_left = false;
 	check_go_right = false;
+	plus_dan_threat = 25;
 	set_clip();
 }
 void  threatObject::set_clip() {
@@ -36,11 +37,7 @@ void  threatObject::set_clip() {
 }
 
 threatObject::~threatObject() {
-	for (int i = 0; i < dan_t_list.size(); i++) {
-		baseObject* p = dan_t_list.at(i);
-		if (p != NULL) { delete p; p = NULL; }
-	}
-	dan_t_list.clear();
+		if (dan_t_one != NULL) { delete dan_t_one; dan_t_one = NULL; }
 }
 
 
@@ -54,15 +51,13 @@ void threatObject::check_map_threat(Map& map_data) {
 		return;
 	}
 	plus_y += GRAVITY;
-	int w_min = WIDTH_THREAT / 8;
-	int h_min = HEIGTH_THREAT;
 	rectObject.x = x_val_T - start_map.x;
 
 	//check horizontal
 	int x1 = (x_val_T + plus_x) / TILE_SIZE;
 	int x2 = (x_val_T + plus_x + WIDTH_THREAT / 8 - 1) / TILE_SIZE;
 	int y1 = (rectObject.y ) / TILE_SIZE;
-	int y2 = (rectObject.y+ h_min - 1) / TILE_SIZE;
+	int y2 = (rectObject.y+ HEIGTH_THREAT - 1) / TILE_SIZE;
 
 
 	if (x1 >= 0 && x2 < MAX_MAP_X && y1 >= 0 && y2 < MAX_MAP_Y)
@@ -72,6 +67,8 @@ void threatObject::check_map_threat(Map& map_data) {
 			if (map_data.tile[y1][x2] == STATE_MONEY || map_data.tile[y2][x2] == STATE_MONEY) { ; }
 			else if ((map_data.tile[y1][x2] != 0 || map_data.tile[y2][x2] != 0)) {
 				plus_x = 0;
+				dan_t_one->setRectObject(this->rectObject.x + 30, this->rectObject.y, W_Laserr, H_Laserr);
+				plus_dan_threat = -abs(plus_dan_threat);
 				check_go_left = true;
 				check_go_right = false;
 				on_ground = true;
@@ -81,6 +78,8 @@ void threatObject::check_map_threat(Map& map_data) {
 			if (map_data.tile[y1][x1] == STATE_MONEY || map_data.tile[y2][x1] == STATE_MONEY) {  ;}
 			else if (map_data.tile[y1][x1] != 0 || map_data.tile[y2][x1] != 0) {
 				plus_x = 0;
+				dan_t_one->setRectObject(this->rectObject.x - 30, this->rectObject.y, W_Laserr, H_Laserr);
+				plus_dan_threat = abs(plus_dan_threat);
 				check_go_left = false;
 				check_go_right = true;
 				on_ground = true;
@@ -90,7 +89,7 @@ void threatObject::check_map_threat(Map& map_data) {
 
 	//check vertical
 	x1 = (x_val_T) / TILE_SIZE;
-	x2 = (x_val_T + w_min) / TILE_SIZE;
+	x2 = (x_val_T + WIDTH_THREAT / 8) / TILE_SIZE;
 	y1 = (rectObject.y  + plus_y) / TILE_SIZE;
 	y2 = (rectObject.y  + plus_y + HEIGTH_THREAT) / TILE_SIZE;
 
@@ -134,9 +133,24 @@ void threatObject::move_threat(SDL_Renderer* screen)
 		return;
 	}
 
+	if (x_val_T < left_threat) { 
+		plus_x = SPEED_THREAT; check_go_right = true; check_go_left = false;  
+		dan_t_one->setRectObject(this->rectObject.x - 30, this->rectObject.y, W_Laserr, H_Laserr); 
+		plus_dan_threat = abs(plus_dan_threat);
+	}
+	else if (x_val_T > right_threat) {
+		plus_x = -SPEED_THREAT; check_go_right = false; check_go_left = true; 
+		dan_t_one->setRectObject(this->rectObject.x + 30, this->rectObject.y, W_Laserr, H_Laserr);
+		plus_dan_threat = -abs(plus_dan_threat);
+	}
+	SDL_Rect k = dan_t_one->getRectObject();
+	k.x += plus_dan_threat;
+	if(k.x>rectObject.x+RANGE_X*5 || k.x < rectObject.x - RANGE_X * 5) dan_t_one->setRectObject(0,0,0,0);
+	else {
+		dan_t_one->set_x_y_rectObject(k.x, k.y);
+	}
 
-	if (x_val_T < left_threat) { plus_x = SPEED_THREAT; check_go_right = true; check_go_left = false;  }
-	else if (x_val_T > right_threat) { plus_x = -SPEED_THREAT; check_go_right = false; check_go_left = true; }
+
 	if (check_go_left== true) {
 		loadTextureObject("img//threat_left.png", screen);
 		check_go_right = false;
@@ -159,25 +173,16 @@ void threatObject::Renderer_threatO(Map& map_data, SDL_Renderer* renderer_threat
 		index++;
 		if (index >= 8) index = 0;
 	if (rectObject.x<0 || rectObject.y<0 || rectObject.x>SDL_CF::SCREEN_WIDTH || rectObject.y>SDL_CF::SCREEN_HEIGHT) return;
+	dan_t_one->renderObject(renderer_threatO);
 	move_threat(renderer_threatO);
 	renderObject(renderer_threatO, &clip_threat);
 }
 
 
 void threatObject::set_dan_threat(SDL_Renderer* rendererThreat) {
-	baseObject* dan_threat = new baseObject();
-	dan_threat->setRectObject(this->rectObject.x - 30, this->rectObject.y, W_Laserr, H_Laserr);
-	bool load = dan_threat->loadTextureObject("img//player_bullet.png", rendererThreat);
+	dan_t_one = new baseObject();
+	bool load = dan_t_one->loadTextureObject("img//player_bullet.png", rendererThreat);
 	if (load == NULL) return;
-	dan_t_list.push_back(dan_threat);
 }
 
-
-void threatObject::Handle_M_T(int const& x_border, int const& y_border) {
-	SDL_Rect k = dan_T_list().at(0)->getRectObject();
-	if (get_is_reset() == false) return;
-	if (k.x < 0) { k.x = this->rectObject.x - 30; k.y = this->rectObject.y; }
-	else k.x -= 8;
-	dan_T_list().at(0)->set_x_y_rectObject(k.x, k.y);
-};
 

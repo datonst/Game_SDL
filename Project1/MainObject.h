@@ -52,7 +52,7 @@ public:
 
 	
 	std::vector<Amop*> GetlistAmop() const { return p_amo; }
-	void ShowAmo(SDL_Renderer* renderer_mainO);
+	void ShowAmo(Map& map_data,SDL_Renderer* renderer_mainO);
 	void set_list(std::vector<Amop*> x) { p_amo = x; };
 };
 #endif

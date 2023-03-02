@@ -10,6 +10,8 @@ Amop::Amop() {
 	rectObject.y = 0;
 	rectObject.w = 0;
 	rectObject.h = 0;
+	plus_x = 0;
+	plus_y = 0;
 };
 
 Amop::~Amop() {
@@ -18,8 +20,65 @@ Amop::~Amop() {
 
 
 void Amop::Handle_MM(int const& x_border, int const& y_border) {
-	rectObject.x += SPEED_GUN;
+	rectObject.x += plus_x;
 	if (rectObject.x<0 || rectObject.x>x_border) is_move = false;
 	if (rectObject.y<0 || rectObject.y>y_border) is_move = false;
 };
 
+
+void Amop::change_map_amo(Map& map_data) {
+
+	//check horizontal
+	int x1 = (rectObject.x + start_map.x ) / TILE_SIZE;
+	int x2 = (rectObject.x + start_map.x + W_Laser - 1) / TILE_SIZE;
+	int y1 = (rectObject.y + start_map.y) / TILE_SIZE;
+	int y2 = (rectObject.y + start_map.y + H_Laser - 1) / TILE_SIZE;
+
+	if (x1 >= 0 && x2 < MAX_MAP_X && y1 >= 0 && y2 < MAX_MAP_Y)
+	{
+
+		if (plus_x > 0) {
+			if (map_data.tile[y1][x2] == STATE_MONEY || map_data.tile[y2][x2] == STATE_MONEY) { ; }
+			else if (map_data.tile[y1][x2] != 0 || map_data.tile[y2][x2] != 0) {
+				plus_x = 0;
+				is_move = false;
+
+			}
+		}
+		else if (plus_x < 0) {
+			if (map_data.tile[y1][x1] == STATE_MONEY || map_data.tile[y2][x1] == STATE_MONEY) { ; }
+			else if (map_data.tile[y1][x1] != 0 || map_data.tile[y2][x1] != 0) {
+				plus_x = 0;
+				is_move = false;
+			}
+		}
+	}
+
+	//check vertical
+	x1 = (rectObject.x + start_map.x) / TILE_SIZE;
+	x2 = (rectObject.x + start_map.x + W_Laser) / TILE_SIZE;
+	y1 = (rectObject.y + start_map.y ) / TILE_SIZE;
+	y2 = (rectObject.y + start_map.y + H_Laser) / TILE_SIZE;
+
+	if (x1 >= 0 && x2 < MAX_MAP_X && y1 >= 0 && y2 < MAX_MAP_Y)
+	{
+
+		if (plus_y < 0) {
+			if (map_data.tile[y1][x1] == STATE_MONEY || map_data.tile[y1][x2] == STATE_MONEY) { ; }
+			else if (map_data.tile[y1][x1] != 0 || map_data.tile[y1][x2] != 0) {
+				plus_y = 0;
+				is_move = false;
+			}
+		}
+
+		else if (plus_y > 0) {
+			if (map_data.tile[y2][x1] == STATE_MONEY || map_data.tile[y2][x2] == STATE_MONEY) { ; }
+			else if (map_data.tile[y2][x1] != 0 || map_data.tile[y2][x2] != 0) {
+				plus_y = 0;
+				is_move = false;
+			}
+		}
+	}
+	rectObject.x += plus_x;
+	rectObject.y += plus_y;
+};

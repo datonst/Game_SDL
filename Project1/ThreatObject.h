@@ -20,7 +20,7 @@ private:
 	int come_back_time;
 	SDL_Rect clip_threat;
 	SDL_Rect clip[8];
-	int x_val_T;
+	int x_val_T;   //locate threat in map
 	int y_val_T;
 	start start_map;
 	int plus_x;
@@ -31,9 +31,9 @@ private:
 	bool check_go_right;
 	int right_threat;
 	int left_threat;
-	std::vector<baseObject*> dan_t_list;
-	bool is_reset;
 
+	baseObject* dan_t_one;
+	int plus_dan_threat;
 public:
 	threatObject();
 	~threatObject();
@@ -45,12 +45,8 @@ public:
 	void set_startMap(int const& x, int const& y) { start_map.x = x; start_map.y = y; }
 	void move_threat(SDL_Renderer* screen);
 
-	bool get_is_reset() const { return is_reset; }
-	std::vector <baseObject*> dan_T_list() const { return dan_t_list; }
+	baseObject* dan_T_one() const { return dan_t_one; }
 	void set_dan_threat(SDL_Renderer* rendererThreat);
-	void set_list_threat(std::vector<baseObject*> x) { dan_t_list = x; }
-	void Handle_M_T(int const& x_border, int const& y_border);
-	void set_is_reset(bool const& reset) { is_reset = reset; }
 
 };
 #endif
