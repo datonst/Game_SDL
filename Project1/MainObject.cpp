@@ -23,14 +23,15 @@ MainO::MainO() {
 	COLOR_KEY_R = 255;
 	COLOR_KEY_G = 255;
 	COLOR_KEY_B = 255;
+	number_die=1;
 };
 
 void  MainO::set_clip() {
 	for (int i = 0; i < 8; i++) {
 		clip[i].x = i * WIDTH_FRAME / 8;
 		clip[i].y = 0;
-		clip[i].w = 60;
-		clip[i].h = 64;
+		clip[i].w = WIDTH_FRAME / 8;
+		clip[i].h = HEIGHT_FRAME;
 	}
 }
 
@@ -131,7 +132,6 @@ void MainO::move_mainO(SDL_Event &event, SDL_Renderer* renderer_mainO) {
 
 
 void MainO::Renderer_mainO(Map&  map_data,SDL_Renderer* renderer_mainO) {
-	
 	change_map(map_data);
 	ShowAmo(map_data, renderer_mainO);
 	if (come_back_time != 0) return;    // When drop pause load image;
@@ -162,10 +162,6 @@ void MainO::change_map(Map& map_data){
 
 	if (come_back_time >0) {
 		come_back_time -= 2;
-		if (come_back_time == 0) {
-			rectObject.x -=4*TILE_SIZE;
-			rectObject.y = 0;
-		}
 		return;
 	}
 	plus_y += RUN_Y;
@@ -250,6 +246,9 @@ void MainO::change_map(Map& map_data){
 	rectObject.y += plus_y;
 	if (rectObject.y > map_data.max_y_) {
 		come_back_time = 60;
+		number_die--;
+		rectObject.x -= 4 * TILE_SIZE;
+		rectObject.y = 0;
 	}
 }
 
@@ -272,9 +271,8 @@ void MainO::runMap(const Map& map_data) {
 
 
 void MainO :: ShowAmo(Map& map_data,SDL_Renderer* renderer_mainO) {
-	for (int i = 0; i < GetlistAmop().size(); i++) {
-		std::vector<Amop*> v = GetlistAmop();
-		Amop* doc = v.at(i);
+	for (int i = 0; i < p_amo.size(); i++) {
+		Amop* doc = p_amo.at(i);
 		if (doc == NULL) continue;
 		doc->change_map_amo(map_data);
 		doc->Handle_MM(SDL_CF::SCREEN_WIDTH, SDL_CF::SCREEN_HEIGHT);
@@ -282,11 +280,31 @@ void MainO :: ShowAmo(Map& map_data,SDL_Renderer* renderer_mainO) {
 			doc->renderObject(renderer_mainO);
 		}
 		else {
-			v.erase(v.begin() + i);
-			set_list(v);
+			p_amo.erase(p_amo.begin() + i);
 			delete doc;
 			doc = NULL;
 		}
-		v.clear();
 	}
+}
+
+bool MainO::check_run_over(SDL_Window* g_window, SDL_Renderer* g_renderer,SDL_Texture* background) {
+	if (number_die <= 0) {
+		SDL_RenderPresent(g_renderer);
+		if (MessageBox(NULL, L"Game Over", L"Info", MB_OK | MB_ICONSTOP) == IDOK) {
+			SDL_CF::quitSDL(g_window, g_renderer);
+			SDL_DestroyTexture(background);
+			background = NULL;
+			return true;
+		}
+	}
+	return false;
+}
+
+bool MainO::crash_object(SDL_Window* g_window, SDL_Renderer* g_renderer, SDL_Texture* background) {
+	number_die--;
+	come_back_time = 60;
+	rectObject.x -= TILE_SIZE;
+	rectObject.y = 0;
+	if (check_run_over(g_window, g_renderer, background)) return true;
+	return false;
 }

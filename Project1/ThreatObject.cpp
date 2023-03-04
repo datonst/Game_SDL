@@ -44,15 +44,10 @@ threatObject::~threatObject() {
 void threatObject::check_map_threat(Map& map_data) {
 	if (come_back_time > 0) {
 		come_back_time -= 2;
-		if (come_back_time == 0) {
-			rectObject.x -= 4 * TILE_SIZE;
-			rectObject.y = 0;
-		}
 		return;
 	}
 	plus_y += GRAVITY;
 	rectObject.x = x_val_T - start_map.x;
-
 	//check horizontal
 	int x1 = (x_val_T + plus_x) / TILE_SIZE;
 	int x2 = (x_val_T + plus_x + WIDTH_THREAT / 8 - 1) / TILE_SIZE;
@@ -121,9 +116,13 @@ void threatObject::check_map_threat(Map& map_data) {
 	x_val_T += plus_x;
 	rectObject.y += plus_y;
 	if (rectObject.y > map_data.max_y_) {
-		come_back_time = 60;
+
 	}
-	
+	if (rectObject.y > map_data.max_y_) {
+		come_back_time = 60;
+		rectObject.x -= 4 * TILE_SIZE;
+		rectObject.y = 0;
+	}
 }
 
 void threatObject::move_threat(SDL_Renderer* screen)
@@ -165,14 +164,9 @@ void threatObject::move_threat(SDL_Renderer* screen)
 
 void threatObject::Renderer_threatO(Map& map_data, SDL_Renderer* renderer_threatO) {
 	check_map_threat(map_data);
-	if (rectObject.y < 0) {
-		x_val_T -= TILE_SIZE * 2;
-	}
-	if (come_back_time != 0) return;    // When drop pause load image;
-		clip_threat = clip[index];
-		index++;
-		if (index >= 8) index = 0;
-	if (rectObject.x<0 || rectObject.y<0 || rectObject.x>SDL_CF::SCREEN_WIDTH || rectObject.y>SDL_CF::SCREEN_HEIGHT) return;
+	clip_threat = clip[index];
+	index++;
+	if (index >= 8) index = 0;
 	dan_t_one->renderObject(renderer_threatO);
 	move_threat(renderer_threatO);
 	renderObject(renderer_threatO, &clip_threat);

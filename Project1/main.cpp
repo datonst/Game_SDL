@@ -3,8 +3,9 @@
 #include "MainObject.h"
 #include "Timer.h"
 #include "ThreatObject.h"
-
-int main(int arc, char* argv[])
+#include "Explosion.h"
+#undef main
+int main(int arc, const char* argv[])
 {
 	int COLOR_KEY_R = 167;
 	int COLOR_KEY_G = 175;
@@ -19,15 +20,20 @@ int main(int arc, char* argv[])
 	SDL_Texture* background = SDL_CF::loadTexture("img//background.png", g_renderer, COLOR_KEY_R, COLOR_KEY_G, COLOR_KEY_B);
 	SDL_RenderCopy(g_renderer, background, NULL, NULL);
 
-
+	//load map
 	gameMap tx;
 	tx.loadMap("map//map01.dat");
 	tx.loadMapTiles(g_renderer);
 
+
+	//load character
 	MainO human;
 	human.loadTextureObject("img//player_right.png", g_renderer);
 	human.setRectObject(0, 0, 60, 64);
+	human.set_number_die(5);
+	
 
+	//load threat
 	std::vector<threatObject*> list_vat_can;
 	threatObject* vat_can;
 	for (int i = 1; i < 8; i++) {
@@ -40,6 +46,9 @@ int main(int arc, char* argv[])
 		list_vat_can.push_back(vat_can);
 	}
 
+	//load explosion
+	Explosion exp;
+	bool t_exp=exp.loadTextureObject("img//exp3.png", g_renderer);
 
 
 	bool is_quit = false;
@@ -60,7 +69,7 @@ int main(int arc, char* argv[])
 
 		human.set_startMap(ga_map.start_x_, ga_map.start_y_);  //load vị trí của điểm bắt đầu của map vào human để xử lý.
 		human.Renderer_mainO(ga_map, g_renderer);  // xử lý map và nhân vật đồng thời load image nhân vật.
-
+		if (human.check_run_over(g_window, g_renderer, background)) return 0;
 
 		tx.setMap(ga_map);
 		tx.set_startMap_XY(human.get_startMap().x, human.get_startMap().y); // set lại vị trí sau khi thay đổi của điểm bắt đầu của map vào tile_map;
@@ -73,18 +82,27 @@ int main(int arc, char* argv[])
 			list_vat_can.at(i)->Renderer_threatO(ga_map, g_renderer);
 			//check can_can crash human
 			if (SDL_CF::is_crash(list_vat_can.at(i)->getRectObject(), human.getRectObject()) == true) {
+				if (human.crash_object(g_window, g_renderer, background)) return 0;
+				exp.getRect_x_y_explosion(list_vat_can.at(i)->getRectObject().x, list_vat_can.at(i)->getRectObject().y);
+				exp.renderExplosion(g_renderer);
 				delete list_vat_can.at(i);
 				list_vat_can.at(i) = NULL;
 				list_vat_can.erase(list_vat_can.begin() + i);
 			}
 			//check vat_can_amo to human
 			if (SDL_CF::is_crash(list_vat_can.at(i)->dan_T_one()->getRectObject(), human.getRectObject()) == true){
+				if (human.crash_object(g_window, g_renderer, background)) return 0;
 				list_vat_can.at(i)->dan_T_one()->setRectObject(0, 0, 0, 0);
 			}
 			// check human_amo to vat_can
 			for (int j = 0; j < human.GetlistAmop().size(); j++) {   
 				if(list_vat_can.size() == 0) break;
 				if (SDL_CF::is_crash(list_vat_can.at(i)->getRectObject(), human.GetlistAmop().at(j)->getRectObject())) {
+					if (t_exp != NULL) {
+						exp.getRect_x_y_explosion(list_vat_can.at(i)->getRectObject().x, list_vat_can.at(i)->getRectObject().y);
+						exp.renderExplosion(g_renderer);
+					}
+					human.delete_amo_object(j);
 					delete list_vat_can.at(i);
 					list_vat_can.at(i) = NULL;
 					list_vat_can.erase(list_vat_can.begin() + i);
@@ -111,4 +129,3 @@ int main(int arc, char* argv[])
 
 	return 0;
 }
-#undef main

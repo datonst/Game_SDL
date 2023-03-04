@@ -38,6 +38,7 @@ private:
 	const int HEIGHT_FRAME = 64;
 	const int w_frame = WIDTH_FRAME/8;
 	const int h_frame = 64;
+	int number_die;
 public:
 	MainO();
 	~MainO();
@@ -49,8 +50,11 @@ public:
 	void runMap(const Map& map_data);
 	start get_startMap() const { return start_map; }
 	void set_startMap(const int&x, const int &y) { start_map.x = x; start_map.y = y; }
-
-	
+	void delete_amo_object(int const& i) { if (i < p_amo.size()) { p_amo.erase(p_amo.begin() + i); } }
+	bool check_run_over(SDL_Window* g_window, SDL_Renderer* g_renderer, SDL_Texture* background);
+	void set_number_die(int const& x) { number_die = x; }
+	int get_number_die() const { return number_die; }
+	bool crash_object(SDL_Window* g_window, SDL_Renderer* g_renderer, SDL_Texture* background);
 	std::vector<Amop*> GetlistAmop() const { return p_amo; }
 	void ShowAmo(Map& map_data,SDL_Renderer* renderer_mainO);
 	void set_list(std::vector<Amop*> x) { p_amo = x; };
