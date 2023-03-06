@@ -71,7 +71,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)Lib_bosung\SDL2-2.26.2\include;$(SolutionDir)Lib_bosung\SDL2_image-2.6.2\include;$(SolutionDir)Lib_bosung\SDL2_mixer-2.6.2\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Lib_bosung\SDL2-2.26.2\include;$(SolutionDir)Lib_bosung\SDL2_image-2.6.2\include;$(SolutionDir)Lib_bosung\SDL2_mixer-2.6.2\include;$(SolutionDir)Lib_bosung\SDL2_ttf-2.20.1\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Lib_bosung\SDL2_image-2.6.2\lib\x64;$(SolutionDir)Lib_bosung\SDL2_mixer-2.6.2\lib\x64;$(SolutionDir)Lib_bosung\SDL2_ttf-2.20.1\lib\x64;$(SolutionDir)Lib_bosung\SDL2-2.26.2\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -138,6 +138,7 @@
     <ClCompile Include="Explosion.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainObject.cpp" />
+    <ClCompile Include="Text.cpp" />
     <ClCompile Include="ThreatObject.cpp" />
     <ClCompile Include="tile_map.cpp" />
     <ClCompile Include="Timer.cpp" />
@@ -148,6 +149,7 @@
     <ClInclude Include="CommonFunction.h" />
     <ClInclude Include="Explosion.h" />
     <ClInclude Include="MainObject.h" />
+    <ClInclude Include="Text.h" />
     <ClInclude Include="ThreatObject.h" />
     <ClInclude Include="tile_map.h" />
     <ClInclude Include="Timer.h" />

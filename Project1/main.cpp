@@ -4,6 +4,7 @@
 #include "Timer.h"
 #include "ThreatObject.h"
 #include "Explosion.h"
+#include"Text.h"
 #undef main
 int main(int arc, const char* argv[])
 {
@@ -17,20 +18,26 @@ int main(int arc, const char* argv[])
 
 
 	SDL_CF::initSDL(g_window, g_renderer);
+	if (TTF_Init() == -1) return 0;
 	SDL_Texture* background = SDL_CF::loadTexture("img//background.png", g_renderer, COLOR_KEY_R, COLOR_KEY_G, COLOR_KEY_B);
 	SDL_RenderCopy(g_renderer, background, NULL, NULL);
+	
+	//load Text
+	Text time_game,text_money;
+	time_game.setTimeGame();
+	text_money.setMoney();
 
 	//load map
 	gameMap tx;
 	tx.loadMap("map//map01.dat");
 	tx.loadMapTiles(g_renderer);
-
+	
 
 	//load character
 	MainO human;
 	human.loadTextureObject("img//player_right.png", g_renderer);
 	human.setRectObject(0, 0, 60, 64);
-	human.set_number_die(5);
+	human.set_number_die(100);
 	
 
 	//load threat
@@ -62,6 +69,9 @@ int main(int arc, const char* argv[])
 			human.move_mainO(g_even, g_renderer);
 		}
 
+		//renderer text
+		if (time_game.renderTimeGame(g_window, g_renderer, background)) return 0;
+		text_money.renderMoney(human.get_money(), g_renderer);
 
 		//process human and tile_map
 		Map ga_map = tx.getMap();
@@ -110,6 +120,7 @@ int main(int arc, const char* argv[])
 			}
 		}
 
+		
 		SDL_RenderPresent(g_renderer);
 
 		//process timer
@@ -121,6 +132,8 @@ int main(int arc, const char* argv[])
 				SDL_Delay(delay);
 			}
 		}
+
+
 	}
 
 	SDL_CF::quitSDL(g_window, g_renderer);

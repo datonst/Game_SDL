@@ -25,7 +25,6 @@ void baseObject::renderObject(SDL_Renderer *des,const SDL_Rect* clip /* =NULL*/)
 void baseObject::freeObject(){
 	if(p_object!=NULL) {
 		SDL_DestroyTexture(p_object);
-		p_object=NULL;
 		rectObject.w=0;
 		rectObject.h=0;
 	}

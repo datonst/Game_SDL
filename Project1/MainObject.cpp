@@ -24,6 +24,8 @@ MainO::MainO() {
 	COLOR_KEY_G = 255;
 	COLOR_KEY_B = 255;
 	number_die=1;
+	gain_money = 0;
+	end_round = false;
 };
 
 void  MainO::set_clip() {
@@ -159,7 +161,6 @@ void MainO::UpdateImage(SDL_Renderer* renderer_mainO) {
 
 
 void MainO::change_map(Map& map_data){
-
 	if (come_back_time >0) {
 		come_back_time -= 2;
 		return;
@@ -189,8 +190,8 @@ void MainO::change_map(Map& map_data){
 	{
 
 		if (plus_x>0) {
-			if (map_data.tile[y1][x2] == STATE_MONEY) { map_data.tile[y1][x2] = 0; }
-			if (map_data.tile[y2][x2] == STATE_MONEY) { map_data.tile[y2][x2] = 0; }
+			if (map_data.tile[y1][x2] == STATE_MONEY) { map_data.tile[y1][x2] = 0; gain_money++; }
+			if (map_data.tile[y2][x2] == STATE_MONEY) { map_data.tile[y2][x2] = 0; gain_money++; }
 			if (map_data.tile[y1][x2] != 0 || map_data.tile[y2][x2] != 0) {
 				check.right = false;
 				plus_x = 0;
@@ -198,8 +199,8 @@ void MainO::change_map(Map& map_data){
 			}
 		}
 		else if (plus_x < 0) {
-			if (map_data.tile[y1][x1] == STATE_MONEY) { map_data.tile[y1][x1] = 0; }
-			if (map_data.tile[y2][x1] == STATE_MONEY) { map_data.tile[y2][x1] = 0; }
+			if (map_data.tile[y1][x1] == STATE_MONEY) { map_data.tile[y1][x1] = 0; gain_money++; }
+			if (map_data.tile[y2][x1] == STATE_MONEY) { map_data.tile[y2][x1] = 0; gain_money++; }
 			if (map_data.tile[y1][x1] != 0 || map_data.tile[y2][x1] != 0) {
 				check.left = false;
 				plus_x = 0;
@@ -218,8 +219,8 @@ void MainO::change_map(Map& map_data){
 	{
 
 		if (plus_y<0) {
-			if (map_data.tile[y1][x1] == STATE_MONEY) { map_data.tile[y1][x1] = 0; }
-			if (map_data.tile[y1][x2] == STATE_MONEY) { map_data.tile[y1][x2] = 0; }
+			if (map_data.tile[y1][x1] == STATE_MONEY) { map_data.tile[y1][x1] = 0; gain_money++;}
+			if (map_data.tile[y1][x2] == STATE_MONEY) { map_data.tile[y1][x2] = 0; gain_money++;}
 			if (map_data.tile[y1][x1] != 0 || map_data.tile[y1][x2] != 0) {
 				check.up = false;
 				plus_y = 0;
@@ -228,8 +229,8 @@ void MainO::change_map(Map& map_data){
 		}
 
 		else if (plus_y >0) {
-			if (map_data.tile[y2][x1] == STATE_MONEY) { map_data.tile[y2][x1] = 0; }
-			if (map_data.tile[y2][x2] == STATE_MONEY) { map_data.tile[y2][x2] = 0; }
+			if (map_data.tile[y2][x1] == STATE_MONEY) { map_data.tile[y2][x1] = 0; gain_money++;}
+			if (map_data.tile[y2][x2] == STATE_MONEY) { map_data.tile[y2][x2] = 0; gain_money++;}
 			if (map_data.tile[y2][x1] != 0 || map_data.tile[y2][x2] != 0) {
 				check.down = false;
 				plus_y = 0;
@@ -239,7 +240,7 @@ void MainO::change_map(Map& map_data){
 	}
 	if (rectObject.y < 0) plus_y += RUN_Y;
 
-	start_map.x += plus_x;
+	if(end_round==false) start_map.x += plus_x;
 	runMap(map_data);
 
 	rectObject.x += plus_x;
@@ -254,9 +255,12 @@ void MainO::change_map(Map& map_data){
 
 
 void MainO::runMap(const Map& map_data) {
-	
-	if (rectObject.x < SDL_CF::SCREEN_WIDTH / 3 && left_mid==true) rectObject.x = SDL_CF::SCREEN_WIDTH / 3;
-	else if (rectObject.x > 2 * SDL_CF::SCREEN_WIDTH / 3 && start_map.x < map_data.max_x_ - SDL_CF::SCREEN_WIDTH) { rectObject.x = 2 * SDL_CF::SCREEN_WIDTH / 3; left_mid = true; }
+	if (rectObject.x > SDL_CF::SCREEN_WIDTH*0.9) {
+		rectObject.x = SDL_CF::SCREEN_WIDTH*0.9;
+		return;
+	}
+	if (rectObject.x < SDL_CF::SCREEN_WIDTH / 3 && left_mid == true && end_round==false) rectObject.x = SDL_CF::SCREEN_WIDTH / 3;
+	else if (rectObject.x > 2 * SDL_CF::SCREEN_WIDTH / 3 && start_map.x < map_data.max_x_ - SDL_CF::SCREEN_WIDTH && end_round==false) { rectObject.x = 2 * SDL_CF::SCREEN_WIDTH / 3; left_mid = true; }
 	if (start_map.x == 0) {
 		left_mid = false;
 	}
@@ -266,6 +270,7 @@ void MainO::runMap(const Map& map_data) {
 
 	if (start_map.x + SDL_CF::SCREEN_WIDTH >= map_data.max_x_) {
 		start_map.x = map_data.max_x_ - SDL_CF::SCREEN_WIDTH;
+		end_round = true;
 	}
 }
 

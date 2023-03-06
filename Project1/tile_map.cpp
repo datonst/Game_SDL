@@ -51,7 +51,7 @@ void gameMap::loadMap( const std::string name)
 
 void gameMap::loadMapTiles(SDL_Renderer* screen)
 {
-
+    
     for (int i = 0; i < MAX_TILES; i++)
     {
         const std::string filename = "map//"+std::to_string(i) + ".png";
