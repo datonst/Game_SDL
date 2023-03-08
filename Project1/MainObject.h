@@ -41,6 +41,7 @@ private:
 	int number_die;
 	int gain_money;
 	bool end_round;
+	std::vector <baseObject*> heart;
 public:
 	MainO();
 	~MainO();
@@ -54,13 +55,23 @@ public:
 	void set_startMap(const int& x, const int& y) { if (end_round == false) { start_map.x = x; start_map.y = y; } }
 	void delete_amo_object(int const& i) { if (i < p_amo.size()) { p_amo.erase(p_amo.begin() + i); } }
 	bool check_run_over(SDL_Window* g_window, SDL_Renderer* g_renderer, SDL_Texture* background);
-	void set_number_die(int const& x) { number_die = x; }
+	void set_number_die(int const& x, SDL_Renderer* g_renderer) {
+		number_die = x;
+		for (int i = 0; i < x; i++) {
+			baseObject* heart_=new baseObject();
+			heart_->setColorKey(255, 255, 255);
+			heart_->loadTextureObject("img//heart.png", g_renderer);
+			heart_->setRectObject(i * 40, 0, 35, 35);
+			heart.push_back(heart_);
+		}
+	}
+	void insertHeart(SDL_Renderer* g_renderer);
 	int get_number_die() const { return number_die; }
 	bool crash_object(SDL_Window* g_window, SDL_Renderer* g_renderer, SDL_Texture* background);
 	std::vector<Amop*> GetlistAmop() const { return p_amo; }
 	void ShowAmo(Map& map_data,SDL_Renderer* renderer_mainO);
 	void set_list(std::vector<Amop*> x) { p_amo = x; };
 	int get_money() const { return gain_money; }
-	
+	void renderer_heart(SDL_Renderer* g_renderer);
 };
 #endif

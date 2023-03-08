@@ -21,6 +21,7 @@ public:
 	void set_p_object(SDL_Texture* p_object_) { p_object = p_object_; };
 	SDL_Texture* get_p_object() const { return p_object; }
 	void freeObject();
+	void setColorKey(int const& x, int const& y, int const& z) { COLOR_KEY_R = x; COLOR_KEY_G = y; COLOR_KEY_B = z; }
 
 };
 

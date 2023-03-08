@@ -37,7 +37,7 @@ int main(int arc, const char* argv[])
 	MainO human;
 	human.loadTextureObject("img//player_right.png", g_renderer);
 	human.setRectObject(0, 0, 60, 64);
-	human.set_number_die(100);
+	human.set_number_die(3,g_renderer);
 	
 
 	//load threat
@@ -119,7 +119,7 @@ int main(int arc, const char* argv[])
 				}
 			}
 		}
-
+		human.renderer_heart(g_renderer);
 		
 		SDL_RenderPresent(g_renderer);
 
@@ -132,8 +132,7 @@ int main(int arc, const char* argv[])
 				SDL_Delay(delay);
 			}
 		}
-
-
+		
 	}
 
 	SDL_CF::quitSDL(g_window, g_renderer);

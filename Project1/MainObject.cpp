@@ -37,7 +37,9 @@ void  MainO::set_clip() {
 	}
 }
 
-MainO::~MainO() { ; };
+MainO::~MainO() { 
+	heart.clear();
+};
 
 
 void MainO::move_mainO(SDL_Event &event, SDL_Renderer* renderer_mainO) {
@@ -248,6 +250,8 @@ void MainO::change_map(Map& map_data){
 	if (rectObject.y > map_data.max_y_) {
 		come_back_time = 60;
 		number_die--;
+		delete  heart[heart.size() - 1];
+		heart.pop_back();
 		rectObject.x -= 4 * TILE_SIZE;
 		rectObject.y = 0;
 	}
@@ -255,8 +259,8 @@ void MainO::change_map(Map& map_data){
 
 
 void MainO::runMap(const Map& map_data) {
-	if (rectObject.x > SDL_CF::SCREEN_WIDTH*0.9) {
-		rectObject.x = SDL_CF::SCREEN_WIDTH*0.9;
+	if (rectObject.x > SDL_CF::SCREEN_WIDTH*9/10) {
+		rectObject.x = SDL_CF::SCREEN_WIDTH*9/10;
 		return;
 	}
 	if (rectObject.x < SDL_CF::SCREEN_WIDTH / 3 && left_mid == true && end_round==false) rectObject.x = SDL_CF::SCREEN_WIDTH / 3;
@@ -307,9 +311,26 @@ bool MainO::check_run_over(SDL_Window* g_window, SDL_Renderer* g_renderer,SDL_Te
 
 bool MainO::crash_object(SDL_Window* g_window, SDL_Renderer* g_renderer, SDL_Texture* background) {
 	number_die--;
+	delete  heart[heart.size() - 1];
+	heart.pop_back();
 	come_back_time = 60;
 	rectObject.x -= TILE_SIZE;
 	rectObject.y = 0;
 	if (check_run_over(g_window, g_renderer, background)) return true;
 	return false;
+}
+
+void MainO::renderer_heart(SDL_Renderer* g_renderer) {
+	for (auto & x : heart) {
+		x->renderObject(g_renderer);
+	}
+	return;
+}
+
+void MainO::insertHeart(SDL_Renderer* g_renderer) {
+	baseObject* heart_ = new baseObject();
+	heart_->setColorKey(255, 255, 255);
+	heart_->loadTextureObject("img//heart.png", g_renderer);
+	heart_->setRectObject(heart.at(heart.size()-1)->getRectObject().x + 40, 0, 35, 35);
+	heart.push_back(heart_);
 }
