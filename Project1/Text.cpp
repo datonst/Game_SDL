@@ -2,14 +2,18 @@
 
 Text::Text()
 {
-    font_time = NULL;
+    font = NULL;
     text_color_.r = 255;
     text_color_.g = 255;
     text_color_.b = 255;
     texture_ = NULL;
-    width_ = 0;
-    height_ = 0;
-
+    text.x = 0;
+    text.y = 0;
+    text.h = 0;
+    text.w = 0;
+    val_time = 0;
+    time_val = 0;
+    reset_time = 0;
 }
 
 Text::~Text()
@@ -22,22 +26,14 @@ bool Text::loadFromRenderText(TTF_Font* font, SDL_Renderer* screen)
     if (text_surface)
     {
         texture_ = SDL_CreateTextureFromSurface(screen, text_surface);
-        width_ = text_surface->w;
-        height_ = text_surface->h;
+        text.w = text_surface->w;
+        text.h = text_surface->h;
 
         SDL_FreeSurface(text_surface);
     }
     return texture_ != NULL;
 }
 
-void Text::Free()
-{
-    if (texture_ != NULL)
-    {
-        SDL_DestroyTexture(texture_);
-        texture_ = NULL;
-    }
-}
 
 void Text::setColorText(Uint8 red, Uint8 green, Uint8 blue)
 {
@@ -83,7 +79,7 @@ void Text::rendererText(SDL_Renderer* screen,
     SDL_Point* center /*= NULL*/,
     SDL_RendererFlip flip /*= SDL_FLIP_NONE*/)
 {
-    SDL_Rect renderQuad = { xp, yp, width_, height_ };
+    SDL_Rect renderQuad = { xp, yp, text.w, text.h };
     if (clip != NULL)
     {
         renderQuad.w = clip->w;
@@ -94,17 +90,22 @@ void Text::rendererText(SDL_Renderer* screen,
 
 
 void Text::setTimeGame() {
-    font_time = TTF_OpenFont("font//dlxfont.ttf", 15);
-    if (font_time == NULL) return;
+    font = TTF_OpenFont("font//dlxfont.ttf", 15);
+    if (font == NULL) return;
     setColor(1);
+    text.x = SDL_CF::SCREEN_WIDTH - 200;
+    text.y = 15;
 }
 
 bool Text::renderTimeGame(SDL_Window* g_window, SDL_Renderer* g_renderer, SDL_Texture* background) {
-    Uint32 time_val = SDL_GetTicks() / 1000;
-    Uint32 val_time = 300 - time_val;
+    time_val = SDL_GetTicks() / 1000 - reset_time;
+    val_time = 300 - time_val;
     if (val_time <= 0) {
+        bool ret_game_over = Menu::game_over(g_renderer);
+        if (ret_game_over == false) return false;
         SDL_RenderPresent(g_renderer);
-        if (MessageBox(NULL, L"Game Over", L"Info", MB_OK | MB_ICONSTOP) == IDOK) {
+        bool ret_menu = Menu::showMenu(g_renderer, background);
+        if (ret_menu == true) {
             SDL_CF::quitSDL(g_window, g_renderer);
             SDL_DestroyTexture(background);
             background = NULL;
@@ -113,21 +114,75 @@ bool Text::renderTimeGame(SDL_Window* g_window, SDL_Renderer* g_renderer, SDL_Te
     }
     std::string str_time = "Time: " + std::to_string(val_time);
     setText(str_time);
-    loadFromRenderText(font_time, g_renderer);
-    rendererText(g_renderer, SDL_CF::SCREEN_WIDTH - 200, 15);
+    loadFromRenderText(font, g_renderer);
+    rendererText(g_renderer, text.x, text.y);
     return false;
 }
 
-void Text::setMoney() {
-    font_time = TTF_OpenFont("font//dlxfont.ttf", 15);
-    if (font_time == NULL) return;
+void Text::setMoney(int const& money, SDL_Renderer* g_renderer) {
+    font = TTF_OpenFont("font//dlxfont.ttf", 15);
+    if (font == NULL) return;
     setColor(1);
-}
-
-void Text::renderMoney(int const& money,SDL_Renderer* g_renderer) {
+    image_money.loadTextureObject("img//money.png", g_renderer);
+    image_money.setRectObject(2*SDL_CF::SCREEN_WIDTH / 3-50, 8, 30, 30);
+    text.x = 2 * SDL_CF::SCREEN_WIDTH / 3;
+    text.y = 15;
     std::string str_time = "Money: " + std::to_string(money);
     setText(str_time);
-    loadFromRenderText(font_time, g_renderer);
-    rendererText(g_renderer, SDL_CF::SCREEN_WIDTH/2, 15);
+    renderText(g_renderer);
+}
+
+void Text::setScore(int const& score,SDL_Renderer* g_renderer) {
+    font = TTF_OpenFont("font//dlxfont.ttf", 15);
+    if (font == NULL) return;
+    std::string str_score = "Score: " + std::to_string(score);
+    setText(str_score);
+    text.x = SDL_CF::SCREEN_WIDTH / 3;
+    text.y = 15;
+    setColor(1);
+    renderText(g_renderer);
+};
+void Text::changeMoney(int const& money, SDL_Renderer* g_renderer) {
+    std::string str_time = "Money: " + std::to_string(money);
+    setText(str_time);
+    image_money.renderObject(g_renderer);
+    renderText(g_renderer);
+}
+
+void Text::changeScore(int const& score, SDL_Renderer* g_renderer) {
+    std::string str_score = "Score: " + std::to_string(score);
+    setText(str_score);
+    renderText(g_renderer);
+}
+
+
+void Text::setMenu(SDL_Renderer* g_renderer) {
+    font = TTF_OpenFont("font//menu.ttf", 50);
+    if (font == NULL) return;
+    renderText(g_renderer);
+}
+
+
+void Text::renderText(SDL_Renderer* g_renderer) {
+    loadFromRenderText(font, g_renderer);
+    rendererText(g_renderer, text.x, text.y);
     return;
+}
+
+
+void Text::setGameOver(SDL_Renderer* g_renderer) {
+
+    font = TTF_OpenFont("font//game_over.ttf", 100);
+    if (font == NULL) return;
+    renderText(g_renderer);
+}
+
+void Text::setExit(SDL_Renderer* g_renderer) {
+    font = TTF_OpenFont("font//menu.ttf", 50);
+    if (font == NULL) return;
+    setText("Exit");
+    text.x = SDL_CF::SCREEN_WIDTH - 100;
+    text.y = SDL_CF::SCREEN_HEIGHT - 100;
+    setColor(Text::BLACK_TEXT);
+    renderText(g_renderer);
 }

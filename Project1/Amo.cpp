@@ -12,6 +12,8 @@ Amop::Amop() {
 	rectObject.h = 0;
 	plus_x = 0;
 	plus_y = 0;
+	start_map.x = 0;
+	start_map.y = 0;
 };
 
 Amop::~Amop() {
@@ -26,7 +28,7 @@ void Amop::Handle_MM(int const& x_border, int const& y_border) {
 };
 
 
-void Amop::change_map_amo(Map& map_data) {
+void Amop::check_map_amo(const Map& map_data) {
 
 	//check horizontal
 	int x1 = (rectObject.x + start_map.x ) / TILE_SIZE;
@@ -38,18 +40,21 @@ void Amop::change_map_amo(Map& map_data) {
 	{
 
 		if (plus_x > 0) {
-			if (map_data.tile[y1][x2] == STATE_MONEY || map_data.tile[y2][x2] == STATE_MONEY) { ; }
+			if (map_data.tile[y1][x2] == STATE_MONEY || map_data.tile[y2][x2] == STATE_MONEY ||
+				map_data.tile[y1][x2] == STATE_AID || map_data.tile[y2][x2] == STATE_AID) { ; }
 			else if (map_data.tile[y1][x2] != 0 || map_data.tile[y2][x2] != 0) {
 				plus_x = 0;
 				is_move = false;
-
+				setRectObject(0, 0, 0, 0);
 			}
 		}
 		else if (plus_x < 0) {
-			if (map_data.tile[y1][x1] == STATE_MONEY || map_data.tile[y2][x1] == STATE_MONEY) { ; }
+			if (map_data.tile[y1][x1] == STATE_MONEY || map_data.tile[y2][x1] == STATE_MONEY ||
+				map_data.tile[y1][x1] == STATE_AID || map_data.tile[y2][x1] == STATE_AID) { ; }
 			else if (map_data.tile[y1][x1] != 0 || map_data.tile[y2][x1] != 0) {
 				plus_x = 0;
 				is_move = false;
+				setRectObject(0, 0, 0, 0);
 			}
 		}
 	}
@@ -64,18 +69,22 @@ void Amop::change_map_amo(Map& map_data) {
 	{
 
 		if (plus_y < 0) {
-			if (map_data.tile[y1][x1] == STATE_MONEY || map_data.tile[y1][x2] == STATE_MONEY) { ; }
+			if (map_data.tile[y1][x1] == STATE_MONEY || map_data.tile[y1][x2] == STATE_MONEY||
+				map_data.tile[y1][x1] == STATE_AID || map_data.tile[y1][x2] == STATE_AID) { ; }
 			else if (map_data.tile[y1][x1] != 0 || map_data.tile[y1][x2] != 0) {
 				plus_y = 0;
 				is_move = false;
+				setRectObject(0, 0, 0, 0);
 			}
 		}
 
 		else if (plus_y > 0) {
-			if (map_data.tile[y2][x1] == STATE_MONEY || map_data.tile[y2][x2] == STATE_MONEY) { ; }
+			if (map_data.tile[y2][x1] == STATE_MONEY || map_data.tile[y2][x2] == STATE_MONEY ||
+				map_data.tile[y2][x1] == STATE_AID || map_data.tile[y2][x2] == STATE_AID) { ; }
 			else if (map_data.tile[y2][x1] != 0 || map_data.tile[y2][x2] != 0) {
 				plus_y = 0;
 				is_move = false;
+				setRectObject(0, 0, 0, 0);
 			}
 		}
 	}

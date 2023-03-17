@@ -138,6 +138,7 @@
     <ClCompile Include="Explosion.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainObject.cpp" />
+    <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="ThreatObject.cpp" />
     <ClCompile Include="tile_map.cpp" />
@@ -149,6 +150,7 @@
     <ClInclude Include="CommonFunction.h" />
     <ClInclude Include="Explosion.h" />
     <ClInclude Include="MainObject.h" />
+    <ClInclude Include="Menu.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="ThreatObject.h" />
     <ClInclude Include="tile_map.h" />

@@ -94,26 +94,6 @@ bool SDL_CF::is_crash(const SDL_Rect &obj1, const SDL_Rect &obj2){
 	int bottom_b=obj2.y+obj2.h;
 
 
-/*	//check object b crash to object a
-	if( (left_b>left_a && left_b<right_a && top_b<bottom_a && top_b>top_a)  //  check corner II of object b   ( object a    <--  object b) 
-		|| (right_b>left_a && right_b<right_a && top_b<bottom_a && top_b >top_a) // check corner  I of object b ( object b --> object a) 
-		|| (left_b>left_a && left_b<right_a && bottom_b<bottom_a && bottom_b >top_a) // check corner III of object b   ( object a    <--  object b) 
-		|| (right_b>left_a && right_b<right_a && bottom_b<bottom_a && bottom_b >top_a))  // check corner IV of object b ( object b --> object a)
-	{
-		return true;
-	}
-
-	//check object a crash to object b
-	if( (left_a>left_b && left_a<right_b && top_a<bottom_b && top_a>top_b)        //corner II of object a(object b < --object a)
-		|| (right_a>left_b && right_a<right_b && top_a<bottom_b && top_a >top_b) // corner  I of object a ( object a --> object b) 
-		|| (left_a>left_b && left_a<right_b && bottom_a<bottom_b && bottom_a >top_b) //corner III of object a(object b < --object a)
-		|| (right_a>left_b && right_a<right_b && bottom_a<bottom_b && bottom_a >top_b)) // check corner IV of object a ( object a --> object b)
-	{
-		return true;
-	}
-	*/
-
-
 	// check object_a crash to_object b
 	if ( ((left_a >= left_b && left_a <=right_b) || (right_a>= left_b && right_a<=right_b) ) &&
 		( (top_a >= top_b && top_a <=  bottom_b) || (bottom_a >= top_b &&bottom_a <= bottom_b)) ) return true;
@@ -124,3 +104,6 @@ bool SDL_CF::is_crash(const SDL_Rect &obj1, const SDL_Rect &obj2){
 
 	return false;
 }
+
+
+

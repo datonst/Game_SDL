@@ -1,6 +1,6 @@
 #pragma once
 #ifndef Timer_
-#define TImer_
+#define Timer_
 #include <iostream>
 class ImpTimer
 {

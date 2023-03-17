@@ -26,6 +26,7 @@ MainO::MainO() {
 	number_die=1;
 	gain_money = 0;
 	end_round = false;
+	score = 0;
 };
 
 void  MainO::set_clip() {
@@ -37,8 +38,17 @@ void  MainO::set_clip() {
 	}
 }
 
-MainO::~MainO() { 
+MainO::~MainO() {
+	for (int i = 0; i < heart.size(); i++) {
+		delete heart[i];
+		heart[i] = NULL;
+	}
 	heart.clear();
+	for (int i = 0; i < p_amo.size(); i++) {
+		delete p_amo[i];
+		p_amo[i] = NULL;
+	}
+	p_amo.clear();
 };
 
 
@@ -136,7 +146,8 @@ void MainO::move_mainO(SDL_Event &event, SDL_Renderer* renderer_mainO) {
 
 
 void MainO::Renderer_mainO(Map&  map_data,SDL_Renderer* renderer_mainO) {
-	change_map(map_data);
+	if (number_die <= 0) return;
+	change_map(map_data, renderer_mainO);
 	ShowAmo(map_data, renderer_mainO);
 	if (come_back_time != 0) return;    // When drop pause load image;
 	if (clip_chay == true) {
@@ -151,18 +162,17 @@ void MainO::Renderer_mainO(Map&  map_data,SDL_Renderer* renderer_mainO) {
 void MainO::UpdateImage(SDL_Renderer* renderer_mainO) {
 	bool ret = false;
 	if (check.right == true) {
-		if(check.up==true) ret=loadTextureObject("img//jum_right.png", renderer_mainO);
+		if (check.up == true) ret = loadTextureObject("img//jum_right.png", renderer_mainO);
 		else ret = loadTextureObject("img//player_right.png", renderer_mainO);
 	}
-	else if(check.left == true) {
+	else if (check.left == true) {
 		if (check.up == true) ret = loadTextureObject("img//jum_left.png", renderer_mainO);
 		else ret = loadTextureObject("img//player_left.png", renderer_mainO);
 	}
-	
 }
 
 
-void MainO::change_map(Map& map_data){
+void MainO::change_map(Map& map_data, SDL_Renderer* g_renderer){
 	if (come_back_time >0) {
 		come_back_time -= 2;
 		return;
@@ -193,16 +203,95 @@ void MainO::change_map(Map& map_data){
 
 		if (plus_x>0) {
 			if (map_data.tile[y1][x2] == STATE_MONEY) { map_data.tile[y1][x2] = 0; gain_money++; }
+			else if (map_data.tile[y1][x2] == STATE_AID) {
+				map_data.tile[y1][x2] = 0;
+				insertHeart(g_renderer);
+			}
+			else if (map_data.tile[y1][x2] == STATE_BOMB) {
+				number_die--;
+				map_data.tile[y1][x2] = 0;
+				delete  heart[heart.size() - 1];
+				heart[heart.size() - 1] = NULL;
+				heart.pop_back();
+				bool t_exp = exp.loadTextureObject("img//exp3.png", g_renderer);
+				if (t_exp != NULL) {
+					exp.getRect_x_y_explosion(rectObject.x, rectObject.y);
+					exp.renderExplosion(g_renderer);
+				}
+				if (number_die <= 0) return;
+				come_back_time = 60;
+				rectObject.x -= TILE_SIZE;
+				rectObject.y = 0;
+			}
 			if (map_data.tile[y2][x2] == STATE_MONEY) { map_data.tile[y2][x2] = 0; gain_money++; }
+			else if (map_data.tile[y2][x2] == STATE_AID) {
+				map_data.tile[y2][x2] = 0;
+				insertHeart(g_renderer);
+			}
+			else if (map_data.tile[y2][x2] == STATE_BOMB) {
+				number_die--;
+				map_data.tile[y2][x2] = 0;
+				delete  heart[heart.size() - 1];
+				heart[heart.size() - 1] = NULL;
+				heart.pop_back();
+				bool t_exp = exp.loadTextureObject("img//exp3.png", g_renderer);
+				if (t_exp != NULL) {
+					exp.getRect_x_y_explosion(rectObject.x, rectObject.y);
+					exp.renderExplosion(g_renderer);
+				}
+				if (number_die <= 0) return;
+				come_back_time = 60;
+
+				rectObject.x -= TILE_SIZE;
+				rectObject.y = 0;
+			}
 			if (map_data.tile[y1][x2] != 0 || map_data.tile[y2][x2] != 0) {
 				check.right = false;
 				plus_x = 0;
-
 			}
 		}
 		else if (plus_x < 0) {
 			if (map_data.tile[y1][x1] == STATE_MONEY) { map_data.tile[y1][x1] = 0; gain_money++; }
+			else if (map_data.tile[y1][x1] == STATE_AID) {
+				map_data.tile[y1][x1] = 0;
+				insertHeart(g_renderer);
+			}
+			else if (map_data.tile[y1][x1] == STATE_BOMB) {
+				number_die--;
+				delete  heart[heart.size() - 1];
+				heart[heart.size() - 1] = NULL;
+				heart.pop_back();
+				bool t_exp = exp.loadTextureObject("img//exp3.png", g_renderer);
+				if (t_exp != NULL) {
+					exp.getRect_x_y_explosion(rectObject.x, rectObject.y);
+					exp.renderExplosion(g_renderer);
+				}
+				if (number_die <= 0) return;
+				come_back_time = 60;
+				rectObject.x -= TILE_SIZE;
+				rectObject.y = 0;
+			}
 			if (map_data.tile[y2][x1] == STATE_MONEY) { map_data.tile[y2][x1] = 0; gain_money++; }
+			else if (map_data.tile[y2][x1] == STATE_AID) {
+				map_data.tile[y2][x1] = 0;
+				insertHeart(g_renderer);
+			}
+			else if (map_data.tile[y2][x1] == STATE_BOMB) {
+				number_die--;
+				map_data.tile[y2][x1] = 0;
+				delete  heart[heart.size() - 1];
+				heart[heart.size() - 1] = NULL;
+				heart.pop_back();
+				bool t_exp = exp.loadTextureObject("img//exp3.png", g_renderer);
+				if (t_exp != NULL) {
+					exp.getRect_x_y_explosion(rectObject.x, rectObject.y);
+					exp.renderExplosion(g_renderer);
+				}
+				if (number_die <= 0) return;
+				come_back_time = 60;
+				rectObject.x -= TILE_SIZE;
+				rectObject.y = 0;
+			}
 			if (map_data.tile[y1][x1] != 0 || map_data.tile[y2][x1] != 0) {
 				check.left = false;
 				plus_x = 0;
@@ -222,7 +311,47 @@ void MainO::change_map(Map& map_data){
 
 		if (plus_y<0) {
 			if (map_data.tile[y1][x1] == STATE_MONEY) { map_data.tile[y1][x1] = 0; gain_money++;}
+			else if (map_data.tile[y1][x1] == STATE_AID) {
+				map_data.tile[y1][x1] = 0;
+				insertHeart(g_renderer);
+			}
+			else if (map_data.tile[y1][x1] == STATE_BOMB) {
+				map_data.tile[y1][x1] = 0;
+				delete  heart[heart.size() - 1];
+				heart[heart.size() - 1] = NULL;
+				heart.pop_back();
+				bool t_exp = exp.loadTextureObject("img//exp3.png", g_renderer);
+				if (t_exp != NULL) {
+					exp.getRect_x_y_explosion(rectObject.x, rectObject.y);
+					exp.renderExplosion(g_renderer);
+				}
+				if (number_die <= 0) return;
+				come_back_time = 60;
+				rectObject.x -= TILE_SIZE;
+				rectObject.y = 0;
+			}
 			if (map_data.tile[y1][x2] == STATE_MONEY) { map_data.tile[y1][x2] = 0; gain_money++;}
+			else if (map_data.tile[y1][x2] == STATE_AID) {
+				map_data.tile[y1][x2] = 0;
+				insertHeart(g_renderer);
+			}
+			else if (map_data.tile[y1][x2] == STATE_BOMB) {
+				number_die--;
+				map_data.tile[y1][x2] = 0;
+				delete  heart[heart.size() - 1];
+				heart[heart.size() - 1] = NULL;
+				heart.pop_back();
+				bool t_exp = exp.loadTextureObject("img//exp3.png", g_renderer);
+				if (t_exp != NULL) {
+					exp.getRect_x_y_explosion(rectObject.x, rectObject.y);
+					exp.renderExplosion(g_renderer);
+				}
+				if (number_die <= 0) return;
+				come_back_time = 60;
+				rectObject.x -= TILE_SIZE;
+				rectObject.y = 0;
+			}
+
 			if (map_data.tile[y1][x1] != 0 || map_data.tile[y1][x2] != 0) {
 				check.up = false;
 				plus_y = 0;
@@ -232,7 +361,49 @@ void MainO::change_map(Map& map_data){
 
 		else if (plus_y >0) {
 			if (map_data.tile[y2][x1] == STATE_MONEY) { map_data.tile[y2][x1] = 0; gain_money++;}
+			else if (map_data.tile[y2][x1] == STATE_AID) {
+
+				map_data.tile[y2][x1] = 0;
+				insertHeart(g_renderer);
+			}
+			else if (map_data.tile[y2][x1] == STATE_BOMB) {
+				number_die--;
+				map_data.tile[y2][x1] = 0;
+				delete  heart[heart.size() - 1];
+				heart[heart.size() - 1] = NULL;
+				heart.pop_back();
+				bool t_exp = exp.loadTextureObject("img//exp3.png", g_renderer);
+				if (t_exp != NULL) {
+					exp.getRect_x_y_explosion(rectObject.x, rectObject.y);
+					exp.renderExplosion(g_renderer);
+				}
+				if (number_die <= 0) return;
+				come_back_time = 60;
+				rectObject.x -= TILE_SIZE;
+				rectObject.y = 0;
+
+			}
 			if (map_data.tile[y2][x2] == STATE_MONEY) { map_data.tile[y2][x2] = 0; gain_money++;}
+			else if (map_data.tile[y2][x2] == STATE_AID) {
+				map_data.tile[y2][x2] = 0;
+				insertHeart(g_renderer);
+			}
+			else if (map_data.tile[y2][x2] == STATE_BOMB) {
+				map_data.tile[y2][x2] = 0;
+				number_die--;
+				delete  heart[heart.size() - 1];
+				heart[heart.size() - 1] = NULL;
+				heart.pop_back();
+				bool t_exp = exp.loadTextureObject("img//exp3.png", g_renderer);
+				if (t_exp != NULL) {
+					exp.getRect_x_y_explosion(rectObject.x, rectObject.y);
+					exp.renderExplosion(g_renderer);
+				}
+				if (number_die <= 0) return;
+				come_back_time = 60;
+				rectObject.x -= TILE_SIZE;
+				rectObject.y = 0;
+			}
 			if (map_data.tile[y2][x1] != 0 || map_data.tile[y2][x2] != 0) {
 				check.down = false;
 				plus_y = 0;
@@ -240,25 +411,30 @@ void MainO::change_map(Map& map_data){
 			}
 		}
 	}
-	if (rectObject.y < 0) plus_y += RUN_Y;
-
-	if(end_round==false) start_map.x += plus_x;
 	runMap(map_data);
-
+	if (rectObject.y < 0) plus_y += RUN_Y; 
+	if (end_round == false) start_map.x += plus_x;
 	rectObject.x += plus_x;
 	rectObject.y += plus_y;
 	if (rectObject.y > map_data.max_y_) {
-		come_back_time = 60;
 		number_die--;
 		delete  heart[heart.size() - 1];
+		heart[heart.size() - 1] = NULL;
 		heart.pop_back();
+		if (number_die == 0) return;
+		come_back_time = 60;
 		rectObject.x -= 4 * TILE_SIZE;
 		rectObject.y = 0;
+
 	}
+	
 }
 
 
 void MainO::runMap(const Map& map_data) {
+	if (number_die <= 0) {
+		return;
+	}
 	if (rectObject.x > SDL_CF::SCREEN_WIDTH*9/10) {
 		rectObject.x = SDL_CF::SCREEN_WIDTH*9/10;
 		return;
@@ -283,7 +459,7 @@ void MainO :: ShowAmo(Map& map_data,SDL_Renderer* renderer_mainO) {
 	for (int i = 0; i < p_amo.size(); i++) {
 		Amop* doc = p_amo.at(i);
 		if (doc == NULL) continue;
-		doc->change_map_amo(map_data);
+		doc->check_map_amo(map_data);
 		doc->Handle_MM(SDL_CF::SCREEN_WIDTH, SDL_CF::SCREEN_HEIGHT);
 		if (doc->get_is_move()) {
 			doc->renderObject(renderer_mainO);
@@ -296,15 +472,20 @@ void MainO :: ShowAmo(Map& map_data,SDL_Renderer* renderer_mainO) {
 	}
 }
 
-bool MainO::check_run_over(SDL_Window* g_window, SDL_Renderer* g_renderer,SDL_Texture* background) {
-	if (number_die <= 0) {
+bool MainO::check_run_over(SDL_Window* g_window, SDL_Renderer* g_renderer, SDL_Texture* background) {
+	if (number_die <= 0 && rectObject.x>0) {
+		bool ret_game_over = Menu::game_over(g_renderer);
+		if (ret_game_over == false) return false;
 		SDL_RenderPresent(g_renderer);
-		if (MessageBox(NULL, L"Game Over", L"Info", MB_OK | MB_ICONSTOP) == IDOK) {
+		bool ret_menu = Menu::showMenu(g_renderer, background);
+		if (ret_menu == true) {
 			SDL_CF::quitSDL(g_window, g_renderer);
 			SDL_DestroyTexture(background);
 			background = NULL;
 			return true;
 		}
+		rectObject.x = 0;
+		rectObject.y = 0;
 	}
 	return false;
 }
@@ -312,11 +493,10 @@ bool MainO::check_run_over(SDL_Window* g_window, SDL_Renderer* g_renderer,SDL_Te
 bool MainO::crash_object(SDL_Window* g_window, SDL_Renderer* g_renderer, SDL_Texture* background) {
 	number_die--;
 	delete  heart[heart.size() - 1];
+	heart[heart.size() - 1] = NULL;
 	heart.pop_back();
-	come_back_time = 60;
-	rectObject.x -= TILE_SIZE;
-	rectObject.y = 0;
 	if (check_run_over(g_window, g_renderer, background)) return true;
+	if (number_die <= 0) return true;
 	return false;
 }
 
@@ -328,9 +508,34 @@ void MainO::renderer_heart(SDL_Renderer* g_renderer) {
 }
 
 void MainO::insertHeart(SDL_Renderer* g_renderer) {
+	number_die++;
 	baseObject* heart_ = new baseObject();
 	heart_->setColorKey(255, 255, 255);
 	heart_->loadTextureObject("img//heart.png", g_renderer);
 	heart_->setRectObject(heart.at(heart.size()-1)->getRectObject().x + 40, 0, 35, 35);
 	heart.push_back(heart_);
+}
+
+
+void MainO::resetHuman() {
+	gain_money = 0;
+	score = 0;
+	rectObject.x = 0;
+	rectObject.y = 0;
+	start_map.x = 0;
+	start_map.y = 0;
+	plus_x = 0;
+	end_round = false;
+	left_mid = false;
+	clip_chay = false;
+	index = 0;
+	check.left = false;
+	check.right = true;
+
+	for (int i = 0; i < heart.size(); i++) {
+		delete heart[i];
+		heart[i] = NULL;
+	}
+	heart.clear();
+	
 }

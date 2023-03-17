@@ -6,8 +6,9 @@
 #include "tile_map.h"
 #include "Amo.h"
 #include <vector>
-
-
+#include "Menu.h"
+#include "Text.h"
+#include"Explosion.h"
 #define RUN_X 10
 #define RUN_Y 3
 
@@ -41,7 +42,9 @@ private:
 	int number_die;
 	int gain_money;
 	bool end_round;
+	int score;
 	std::vector <baseObject*> heart;
+	Explosion exp;
 public:
 	MainO();
 	~MainO();
@@ -49,7 +52,7 @@ public:
 	void Renderer_mainO(Map& map_data, SDL_Renderer* renderer_mainO);
 	void set_clip();
 	void UpdateImage(SDL_Renderer* renderer_mainO);
-	void change_map(Map&  map_data);
+	void change_map(Map&  map_data,SDL_Renderer* g_renderer);
 	void runMap(const Map& map_data);
 	start get_startMap() const { return start_map; }
 	void set_startMap(const int& x, const int& y) { if (end_round == false) { start_map.x = x; start_map.y = y; } }
@@ -63,6 +66,7 @@ public:
 			heart_->loadTextureObject("img//heart.png", g_renderer);
 			heart_->setRectObject(i * 40, 0, 35, 35);
 			heart.push_back(heart_);
+			heart_=NULL;
 		}
 	}
 	void insertHeart(SDL_Renderer* g_renderer);
@@ -73,5 +77,8 @@ public:
 	void set_list(std::vector<Amop*> x) { p_amo = x; };
 	int get_money() const { return gain_money; }
 	void renderer_heart(SDL_Renderer* g_renderer);
+	int get_score() const { return score; }
+	void add_score(int const&x) { score += x;}
+	void resetHuman();
 };
 #endif

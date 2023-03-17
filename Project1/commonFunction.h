@@ -21,5 +21,6 @@ namespace SDL_CF{
 	void waitUntilKeyPressed();
 	SDL_Texture* loadTexture(const std::string& path, SDL_Renderer* renderer,const int &COLOR_KEY_R,const int &COLOR_KEY_G, const int &COLOR_KEY_B);
 	bool is_crash(const SDL_Rect& object1, const SDL_Rect& object2);
+
 }
 #endif
