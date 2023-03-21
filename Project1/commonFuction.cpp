@@ -82,28 +82,6 @@ SDL_Texture* SDL_CF::loadTexture(const std::string& path, SDL_Renderer* renderer
 	return newTexture;
 }
 
-bool SDL_CF::is_crash(const SDL_Rect &obj1, const SDL_Rect &obj2){
-	int left_a=obj1.x;
-	int right_a=obj1.x+obj1.w;
-	int top_a=obj1.y;
-	int bottom_a=obj1.y+obj1.h;
-
-	int left_b=obj2.x;
-	int right_b=obj2.x+obj2.w;
-	int top_b=obj2.y;
-	int bottom_b=obj2.y+obj2.h;
-
-
-	// check object_a crash to_object b
-	if ( ((left_a >= left_b && left_a <=right_b) || (right_a>= left_b && right_a<=right_b) ) &&
-		( (top_a >= top_b && top_a <=  bottom_b) || (bottom_a >= top_b &&bottom_a <= bottom_b)) ) return true;
-
-	// check object_b crash to_object a
-	if (((left_b >= left_a && left_b <= right_a) || (right_b >= left_a && right_b <= right_a)) &&
-		((top_b >= top_a && top_b <= bottom_a) || (bottom_b >= top_a && bottom_b <= bottom_a))) return true;
-
-	return false;
-}
 
 
 

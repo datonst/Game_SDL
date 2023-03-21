@@ -104,11 +104,8 @@ bool Text::renderTimeGame(SDL_Window* g_window, SDL_Renderer* g_renderer, SDL_Te
         bool ret_game_over = Menu::game_over(g_renderer);
         if (ret_game_over == false) return false;
         SDL_RenderPresent(g_renderer);
-        bool ret_menu = Menu::showMenu(g_renderer, background);
-        if (ret_menu == true) {
-            SDL_CF::quitSDL(g_window, g_renderer);
-            SDL_DestroyTexture(background);
-            background = NULL;
+        int ret_menu = Menu::showMenu(g_renderer, background);
+        if (ret_menu == 1) {
             return true;
         }
     }

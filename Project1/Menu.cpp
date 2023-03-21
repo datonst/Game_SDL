@@ -1,7 +1,7 @@
 ﻿#include "Menu.h"
 
 
-bool Menu::showMenu(SDL_Renderer* renderer, SDL_Texture* g_menu)
+int Menu::showMenu(SDL_Renderer* renderer, SDL_Texture* g_menu)
 {
 	g_menu = SDL_CF::loadTexture("img//start_img.png",renderer,255,255,255);
 	if (g_menu == NULL)
@@ -195,21 +195,5 @@ bool Menu::game_over(SDL_Renderer* renderer) {
 }
 
 
-void Menu::initBear(std::vector<threatObject*> &list_bear, SDL_Renderer* g_renderer) {
-	for (int i = 0; i < list_bear.size(); i++) {
-		delete list_bear[i];
-		list_bear[i] = NULL;
-	}
-	list_bear.clear();
-	for (int i = 1; i < 8; i++) {
-		threatObject* vat_can = new threatObject();
-		bool t = vat_can->loadTextureObject("img//threat_left.png", g_renderer);
-		if (t == NULL) continue;
-		vat_can->set_W_H(WIDTH_THREAT_BEAR / 8, HEIGTH_THREAT_BEAR);
-		vat_can->set_X_Y(1500 * i - 840, 100);
-		vat_can->set_dan_threat(g_renderer);
-		list_bear.push_back(vat_can);
-		vat_can = NULL;
-	}
-}
+
 

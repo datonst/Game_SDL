@@ -184,3 +184,4 @@ void threatObject::set_dan_threat(SDL_Renderer* rendererThreat) {
 }
 
 
+

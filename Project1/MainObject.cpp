@@ -477,11 +477,8 @@ bool MainO::check_run_over(SDL_Window* g_window, SDL_Renderer* g_renderer, SDL_T
 		bool ret_game_over = Menu::game_over(g_renderer);
 		if (ret_game_over == false) return false;
 		SDL_RenderPresent(g_renderer);
-		bool ret_menu = Menu::showMenu(g_renderer, background);
-		if (ret_menu == true) {
-			SDL_CF::quitSDL(g_window, g_renderer);
-			SDL_DestroyTexture(background);
-			background = NULL;
+		int ret_menu = Menu::showMenu(g_renderer, background);
+		if (ret_menu == 1) {
 			return true;
 		}
 		rectObject.x = 0;
@@ -490,13 +487,17 @@ bool MainO::check_run_over(SDL_Window* g_window, SDL_Renderer* g_renderer, SDL_T
 	return false;
 }
 
-bool MainO::crash_object(SDL_Window* g_window, SDL_Renderer* g_renderer, SDL_Texture* background) {
+bool MainO::crash_object_over(SDL_Window* g_window, SDL_Renderer* g_renderer, SDL_Texture* background) {
 	number_die--;
 	delete  heart[heart.size() - 1];
 	heart[heart.size() - 1] = NULL;
 	heart.pop_back();
 	if (check_run_over(g_window, g_renderer, background)) return true;
-	if (number_die <= 0) return true;
+	if (number_die > 0) {
+		come_back_time = 60;
+		rectObject.x -= TILE_SIZE;
+		rectObject.y = 0;
+	}
 	return false;
 }
 

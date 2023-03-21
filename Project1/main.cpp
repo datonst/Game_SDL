@@ -6,6 +6,7 @@
 #include "Explosion.h"
 #include"Text.h"
 #include "Menu.h"
+#include "Bottom_Menu.h"
 #undef main
 int main(int arc, const char* argv[])
 {
@@ -20,8 +21,8 @@ int main(int arc, const char* argv[])
 	SDL_CF::initSDL(g_window, g_renderer);
 	if (TTF_Init() == -1) return 0;
 	SDL_Texture* background=NULL;
-	bool ret_menu = Menu::showMenu(g_renderer, background);
-	if (ret_menu == true) return 0;
+	int ret_menu = Menu::showMenu(g_renderer, background);
+	if (ret_menu == 1) return 0;
 	background = SDL_CF::loadTexture("img//background.png", g_renderer, COLOR_KEY_R, COLOR_KEY_G, COLOR_KEY_B);
 	SDL_RenderCopy(g_renderer, background, NULL, NULL);
 
@@ -49,7 +50,7 @@ int main(int arc, const char* argv[])
 	//load threat
 	std::vector<threatObject*> list_bear;
 	std::vector<threatObject*> list_bomb;
-	Menu::initBear(list_bear, g_renderer);
+	Bottom::initBear(list_bear, g_renderer);
 
 
 	//load explosion
@@ -83,16 +84,16 @@ int main(int arc, const char* argv[])
 			{
 				if (Menu::CheckFocusWithRect(g_even.motion.x, g_even.motion.y, text_exit.getRectText()))
 				{
-					bool ret_menu = Menu::showMenu(g_renderer, background);
-					if (ret_menu == true) return 0;
+					int ret_menu = Menu::showMenu(g_renderer, background);
+					if (ret_menu == 1) return 0;
 				}
 			}
 			break;
 			case SDL_KEYDOWN:
 				if (g_even.key.keysym.sym == SDLK_ESCAPE)
 				{
-					bool ret_menu = Menu::showMenu(g_renderer, background);
-					if (ret_menu == true) return 0;
+					int ret_menu = Menu::showMenu(g_renderer, background);
+					if (ret_menu == 1) return 0;
 				}
 			default:
 				break;
@@ -101,7 +102,7 @@ int main(int arc, const char* argv[])
 		}
 		
 		//renderer text
-		if (time_game.renderTimeGame(g_window, g_renderer, background)) return 0;
+		if (time_game.renderTimeGame(g_window, g_renderer, background)) break;
 		text_money.changeMoney(human.get_money(), g_renderer);
 		text_score.changeScore(human.get_score(), g_renderer);
 		
@@ -121,68 +122,19 @@ int main(int arc, const char* argv[])
 		tx.set_startMap_XY(human.get_startMap().x, human.get_startMap().y); // set lại vị trí sau khi thay đổi của điểm bắt đầu của map vào tile_map;
 		tx.drawTiles(g_renderer);
 		//reset Start
-		if (human.check_run_over(g_window, g_renderer, background)) return 0;
+		if (human.check_run_over(g_window, g_renderer, background)) break;
 		if (human.get_number_die() <= 0 || time_game.get_val_time() <= 0) {
-			background = SDL_CF::loadTexture("img//background.png", g_renderer, COLOR_KEY_R, COLOR_KEY_G, COLOR_KEY_B);
-			SDL_RenderCopy(g_renderer, background, NULL, NULL);
-			human.resetHuman();
-			tx.loadMap("map//map01.dat");
-			tx.set_startMap_XY(0, 0);
-			human.set_number_die(3, g_renderer);
-			time_game.resetTime(SDL_GetTicks() / 1000);
-			Menu::initBear(list_bear, g_renderer);
+			Bottom::bottom_start_menu(g_window, g_renderer, background, human, tx, time_game, list_bear);
 			continue;
 		}
-
 		//check threat_object with main_object
-
-		for (int i = 0; i < list_bear.size(); i++) {
-			if (list_bear.size() == 0) break;
-			list_bear.at(i)->set_startMap(ga_map.start_x_, ga_map.start_y_);
-			list_bear.at(i)->Renderer_threatO(ga_map, g_renderer);
-			
-			//check can_can crash human
-			if (SDL_CF::is_crash(list_bear.at(i)->getRectObject(), human.getRectObject()) == true) {
-				exp.getRect_x_y_explosion(list_bear.at(i)->getRectObject().x, list_bear.at(i)->getRectObject().y);
-				exp.renderExplosion(g_renderer);
-				if (human.crash_object(g_window, g_renderer, background)) break;
-				delete list_bear.at(i);
-				list_bear.at(i) = NULL;
-				list_bear.erase(list_bear.begin() + i);
-			}
-			//check vat_can_amo to human
-			if (SDL_CF::is_crash(list_bear.at(i)->dan_T_one()->getRectObject(), human.getRectObject()) == true){
-				if (human.crash_object(g_window, g_renderer, background)) break;
-				list_bear.at(i)->dan_T_one()->setRectObject(0, 0, 0, 0);
-			}
-			// check human_amo to vat_can
-			for (int j = 0; j < human.GetlistAmop().size(); j++) {   
-				if(list_bear.size() == 0) break;
-				if (SDL_CF::is_crash(list_bear.at(i)->getRectObject(), human.GetlistAmop().at(j)->getRectObject())) {
-					if (t_exp != NULL) {
-						exp.getRect_x_y_explosion(list_bear.at(i)->getRectObject().x, list_bear.at(i)->getRectObject().y);
-						exp.renderExplosion(g_renderer);
-						human.add_score(100);
-					}
-					human.delete_amo_object(j);
-					delete list_bear.at(i);
-					list_bear.at(i) = NULL;
-					list_bear.erase(list_bear.begin() + i);
-				}
-			}
-		}
+		if (Crash::Crash_Object(g_window, g_renderer, background, human, ga_map, exp, list_bear)) break;
 		human.renderer_heart(g_renderer);
 		text_exit.renderText(g_renderer);
 		SDL_RenderPresent(g_renderer);
+
 		if (human.get_number_die() <= 0 || time_game.get_val_time() <= 0) {
-			background = SDL_CF::loadTexture("img//background.png", g_renderer, COLOR_KEY_R, COLOR_KEY_G, COLOR_KEY_B);
-			SDL_RenderCopy(g_renderer, background, NULL, NULL);
-			human.resetHuman();
-			tx.loadMap("map//map01.dat");
-			tx.set_startMap_XY(0, 0);
-			human.set_number_die(3, g_renderer);
-			time_game.resetTime(SDL_GetTicks() / 1000);
-			Menu::initBear(list_bear, g_renderer);
+			Bottom::bottom_start_menu(g_window, g_renderer, background, human, tx, time_game, list_bear);
 			continue;
 		}
 		//process timer

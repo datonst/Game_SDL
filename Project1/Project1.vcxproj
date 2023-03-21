@@ -134,6 +134,7 @@
   <ItemGroup>
     <ClCompile Include="Amo.cpp" />
     <ClCompile Include="BaseObject.cpp" />
+    <ClCompile Include="Bottom_Menu.cpp" />
     <ClCompile Include="CommonFuction.cpp" />
     <ClCompile Include="Explosion.cpp" />
     <ClCompile Include="main.cpp" />
@@ -147,6 +148,7 @@
   <ItemGroup>
     <ClInclude Include="Amo.h" />
     <ClInclude Include="BaseObject.h" />
+    <ClInclude Include="Bottom_Menu.h" />
     <ClInclude Include="CommonFunction.h" />
     <ClInclude Include="Explosion.h" />
     <ClInclude Include="MainObject.h" />

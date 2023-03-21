@@ -71,7 +71,7 @@ public:
 	}
 	void insertHeart(SDL_Renderer* g_renderer);
 	int get_number_die() const { return number_die; }
-	bool crash_object(SDL_Window* g_window, SDL_Renderer* g_renderer, SDL_Texture* background);
+	bool crash_object_over(SDL_Window* g_window, SDL_Renderer* g_renderer, SDL_Texture* background);
 	std::vector<Amop*> GetlistAmop() const { return p_amo; }
 	void ShowAmo(Map& map_data,SDL_Renderer* renderer_mainO);
 	void set_list(std::vector<Amop*> x) { p_amo = x; };
