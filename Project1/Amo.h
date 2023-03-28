@@ -32,8 +32,8 @@ public:
 	void set_W_H(int const& w, int const& h) { rectObject.w = w; rectObject.h = h; }
 	void set_X_Y(int const& x, int const& y) { rectObject.x = x; rectObject.y = y; }
 	void left_or_right(bool const&x) {
-		if (x == true) plus_x = -30;
-		else plus_x = 30;
+		if (x == true) plus_x = -25;
+		else plus_x = 25;
 	}
 	void check_map_amo(const Map& map_data);
 	void set_startMap_amo(const int& x, const int& y) { start_map.x = x; start_map.y = y; }

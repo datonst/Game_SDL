@@ -4,6 +4,7 @@
 #include "CommonFunction.h"
 #include "baseObject.h"
 #include "Menu.h"
+#include "Audio.h"
 class Text
 {
 public:
@@ -44,7 +45,7 @@ public:
 
 
     void setTimeGame();
-    bool renderTimeGame(SDL_Window* g_window, SDL_Renderer* g_renderer, SDL_Texture* background);
+    int renderTimeGame(SDL_Window* g_window, SDL_Renderer* g_renderer, SDL_Texture* background, Audio& audio_game, const bool& check_win);
 
     void setMoney(int const& money,SDL_Renderer* g_renderer);
     void setNumberMoney(int const&x) {}

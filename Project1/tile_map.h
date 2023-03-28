@@ -2,7 +2,7 @@
 
 #ifndef TILE_MAP_H
 #define TILE_MAP_H
-#include "baseObject.h"
+#include "BaseObject.h"
 #define TILE_SIZE 64
 #define STATE_MONEY 7
 #define STATE_BOMB 24

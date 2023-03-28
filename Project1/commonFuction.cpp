@@ -3,7 +3,7 @@
 
 
 
-void SDL_CF::initSDL(SDL_Window*& window, SDL_Renderer*& renderer)
+bool SDL_CF::initSDL(SDL_Window*& window, SDL_Renderer*& renderer)
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
 		SDL_CF::logSDLError(std::cout, "SDL_Init", true);
@@ -33,6 +33,13 @@ void SDL_CF::initSDL(SDL_Window*& window, SDL_Renderer*& renderer)
 	//	if(!IMG_Init(imgflag) && imgflag){
 	//		logSDLError(std::cout, "imgflag", true);
 	//	}
+
+	//init Audio
+	if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 4096) == -1) {
+		std::cerr << "Error Load Open Audio" << Mix_GetError << std::endl;
+		return false;
+	}
+	return true;
 }
 
 

@@ -31,10 +31,10 @@ void Amop::Handle_MM(int const& x_border, int const& y_border) {
 void Amop::check_map_amo(const Map& map_data) {
 
 	//check horizontal
-	int x1 = (rectObject.x + start_map.x ) / TILE_SIZE;
-	int x2 = (rectObject.x + start_map.x + W_Laser - 1) / TILE_SIZE;
+	int x1 = (rectObject.x + start_map.x + plus_x) / TILE_SIZE;
+	int x2 = (rectObject.x + start_map.x + plus_x + W_Laser) / TILE_SIZE;
 	int y1 = (rectObject.y + start_map.y) / TILE_SIZE;
-	int y2 = (rectObject.y + start_map.y + H_Laser - 1) / TILE_SIZE;
+	int y2 = (rectObject.y + start_map.y + H_Laser) / TILE_SIZE;
 
 	if (x1 >= 0 && x2 < MAX_MAP_X && y1 >= 0 && y2 < MAX_MAP_Y)
 	{
@@ -62,8 +62,8 @@ void Amop::check_map_amo(const Map& map_data) {
 	//check vertical
 	x1 = (rectObject.x + start_map.x) / TILE_SIZE;
 	x2 = (rectObject.x + start_map.x + W_Laser) / TILE_SIZE;
-	y1 = (rectObject.y + start_map.y ) / TILE_SIZE;
-	y2 = (rectObject.y + start_map.y + H_Laser) / TILE_SIZE;
+	y1 = (rectObject.y + start_map.y + plus_y) / TILE_SIZE;
+	y2 = (rectObject.y + start_map.y + plus_y + H_Laser) / TILE_SIZE;
 
 	if (x1 >= 0 && x2 < MAX_MAP_X && y1 >= 0 && y2 < MAX_MAP_Y)
 	{

@@ -12,7 +12,7 @@
 #define W_Laserr 35
 #define H_Laserr 5
 #define WIDTH_THREAT_BEAR 506
-#define HEIGTH_THREAT_BEAR 64
+#define HEIGHT_THREAT_BEAR 64
 #define WIDTH_THREAT_BOMB 74
 #define HEIGTH_THREAT_BOMB 64
 #define GRAVITY 3

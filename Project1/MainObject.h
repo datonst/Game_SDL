@@ -12,7 +12,12 @@
 #define RUN_X 10
 #define RUN_Y 3
 
-
+struct pathPlayer {
+	std::string left;
+	std::string right;
+	std::string jump_left;
+	std::string jump_right;
+};
 
 struct bottom {
 	bool left = false;
@@ -22,6 +27,7 @@ struct bottom {
 };
 class MainO : public baseObject {
 private:
+	baseObject winner_object;
 	bool on_ground;
 	bool clip_chay;
 	int plus_x;
@@ -35,43 +41,33 @@ private:
 	int come_back_time;
 	std::vector<Amop*> p_amo;
 	bool dan_left;
-	const int WIDTH_FRAME = 480;
-	const int HEIGHT_FRAME = 64;
-	const int w_frame = WIDTH_FRAME/8;
-	const int h_frame = 64;
+	int WIDTH_FRAME;
+	int HEIGHT_FRAME;
 	int number_die;
 	int gain_money;
 	bool end_round;
 	int score;
 	std::vector <baseObject*> heart;
 	Explosion exp;
+	pathPlayer player_images;
+	int length_frame;
 public:
 	MainO();
 	~MainO();
-	void move_mainO  (SDL_Event &event, SDL_Renderer* renderer_mainO);
-	void Renderer_mainO(Map& map_data, SDL_Renderer* renderer_mainO);
+	void move_mainO(SDL_Event &event, SDL_Renderer* renderer_mainO, Audio& audio_game);
 	void set_clip();
+	void Renderer_mainO(Map& map_data, SDL_Renderer* renderer_mainO, Audio& audio_game);
 	void UpdateImage(SDL_Renderer* renderer_mainO);
-	void change_map(Map&  map_data,SDL_Renderer* g_renderer);
-	void runMap(const Map& map_data);
+	void change_map(Map&  map_data,SDL_Renderer* g_renderer, Audio& audio_game);
+	void runMap(const Map& map_data, Audio& audio_game);
 	start get_startMap() const { return start_map; }
 	void set_startMap(const int& x, const int& y) { if (end_round == false) { start_map.x = x; start_map.y = y; } }
 	void delete_amo_object(int const& i) { if (i < p_amo.size()) { p_amo.erase(p_amo.begin() + i); } }
-	bool check_run_over(SDL_Window* g_window, SDL_Renderer* g_renderer, SDL_Texture* background);
-	void set_number_die(int const& x, SDL_Renderer* g_renderer) {
-		number_die = x;
-		for (int i = 0; i < x; i++) {
-			baseObject* heart_=new baseObject();
-			heart_->setColorKey(255, 255, 255);
-			heart_->loadTextureObject("img//heart.png", g_renderer);
-			heart_->setRectObject(i * 40, 0, 35, 35);
-			heart.push_back(heart_);
-			heart_=NULL;
-		}
-	}
+	bool check_run_over(SDL_Window* g_window, SDL_Renderer* g_renderer, SDL_Texture* background, Audio& audio_game);
+	void set_number_die(int const& x, SDL_Renderer* g_renderer);
 	void insertHeart(SDL_Renderer* g_renderer);
 	int get_number_die() const { return number_die; }
-	bool crash_object_over(SDL_Window* g_window, SDL_Renderer* g_renderer, SDL_Texture* background);
+	bool crash_object_over(SDL_Window* g_window, SDL_Renderer* g_renderer, SDL_Texture* background, Audio& audio_game);
 	std::vector<Amop*> GetlistAmop() const { return p_amo; }
 	void ShowAmo(Map& map_data,SDL_Renderer* renderer_mainO);
 	void set_list(std::vector<Amop*> x) { p_amo = x; };
@@ -79,6 +75,10 @@ public:
 	void renderer_heart(SDL_Renderer* g_renderer);
 	int get_score() const { return score; }
 	void add_score(int const&x) { score += x;}
-	void resetHuman();
+	void change_player(const std::string& l, const std::string& r, const std::string& j_l, const std::string& j_r);
+	void resetHuman(SDL_Renderer* g_renderer);
+	void dinosaur(SDL_Renderer* g_renderer);
+	void wolf(SDL_Renderer* g_renderer);
+	bool winner() const { return end_round; }
 };
 #endif

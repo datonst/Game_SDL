@@ -12,7 +12,7 @@ threatObject::threatObject() {
 	clip_threat.x = 0;
 	clip_threat.y = 0;
 	clip_threat.w = WIDTH_THREAT_BEAR/8;
-	clip_threat.h = HEIGTH_THREAT_BEAR;
+	clip_threat.h = HEIGHT_THREAT_BEAR;
 	start_map.x = 0;
 	start_map.y = 0;
 	COLOR_KEY_R = 255;
@@ -32,7 +32,7 @@ void  threatObject::set_clip() {
 		clip[i].x = i * WIDTH_THREAT_BEAR / 8;
 		clip[i].y = 0;
 		clip[i].w = WIDTH_THREAT_BEAR / 8;
-		clip[i].h = HEIGTH_THREAT_BEAR;
+		clip[i].h = HEIGHT_THREAT_BEAR;
 	}
 }
 
@@ -53,7 +53,7 @@ void threatObject::check_map_threat(const Map& map_data) {
 	int x1 = (x_val_T + plus_x) / TILE_SIZE;
 	int x2 = (x_val_T + plus_x + WIDTH_THREAT_BEAR / 8 - 1) / TILE_SIZE;
 	int y1 = (rectObject.y ) / TILE_SIZE;
-	int y2 = (rectObject.y+ HEIGTH_THREAT_BEAR - 1) / TILE_SIZE;
+	int y2 = (rectObject.y+ HEIGHT_THREAT_BEAR - 1) / TILE_SIZE;
 
 
 	if (x1 >= 0 && x2 < MAX_MAP_X && y1 >= 0 && y2 < MAX_MAP_Y)
@@ -93,7 +93,7 @@ void threatObject::check_map_threat(const Map& map_data) {
 	x1 = (x_val_T) / TILE_SIZE;
 	x2 = (x_val_T + WIDTH_THREAT_BEAR / 8) / TILE_SIZE;
 	y1 = (rectObject.y  + plus_y) / TILE_SIZE;
-	y2 = (rectObject.y  + plus_y + HEIGTH_THREAT_BEAR) / TILE_SIZE;
+	y2 = (rectObject.y  + plus_y + HEIGHT_THREAT_BEAR) / TILE_SIZE;
 
 	if (x1 >= 0 && x2 < MAX_MAP_X && y1 >= 0 && y2 < MAX_MAP_Y)
 	{

@@ -97,23 +97,25 @@ void Text::setTimeGame() {
     text.y = 15;
 }
 
-bool Text::renderTimeGame(SDL_Window* g_window, SDL_Renderer* g_renderer, SDL_Texture* background) {
-    time_val = SDL_GetTicks() / 1000 - reset_time;
+int Text::renderTimeGame(SDL_Window* g_window, SDL_Renderer* g_renderer, SDL_Texture* background, Audio& audio_game, const bool &check_win) {
+    int rt = 0;
+    if(check_win==false) time_val = SDL_GetTicks() / 1000 - reset_time;
     val_time = 300 - time_val;
     if (val_time <= 0) {
-        bool ret_game_over = Menu::game_over(g_renderer);
+        bool ret_game_over = Menu::game_over(g_renderer, audio_game);
         if (ret_game_over == false) return false;
         SDL_RenderPresent(g_renderer);
-        int ret_menu = Menu::showMenu(g_renderer, background);
+        int ret_menu = Menu::showMenuStart(g_renderer, background,audio_game);
         if (ret_menu == 1) {
             return true;
         }
+        rt = ret_menu;
     }
     std::string str_time = "Time: " + std::to_string(val_time);
     setText(str_time);
     loadFromRenderText(font, g_renderer);
     rendererText(g_renderer, text.x, text.y);
-    return false;
+    return rt;
 }
 
 void Text::setMoney(int const& money, SDL_Renderer* g_renderer) {
@@ -154,7 +156,7 @@ void Text::changeScore(int const& score, SDL_Renderer* g_renderer) {
 
 
 void Text::setMenu(SDL_Renderer* g_renderer) {
-    font = TTF_OpenFont("font//menu.ttf", 50);
+    font = TTF_OpenFont("font//menu.ttf", 70);
     if (font == NULL) return;
     renderText(g_renderer);
 }

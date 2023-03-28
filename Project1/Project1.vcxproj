@@ -133,6 +133,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Amo.cpp" />
+    <ClCompile Include="Audio.cpp" />
     <ClCompile Include="BaseObject.cpp" />
     <ClCompile Include="Bottom_Menu.cpp" />
     <ClCompile Include="CommonFuction.cpp" />
@@ -147,6 +148,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Amo.h" />
+    <ClInclude Include="Audio.h" />
     <ClInclude Include="BaseObject.h" />
     <ClInclude Include="Bottom_Menu.h" />
     <ClInclude Include="CommonFunction.h" />
