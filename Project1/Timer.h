@@ -13,6 +13,7 @@ public:
 	int get_ticks();
 	bool is_started();
 	bool is_paused();
+	void fps();
 
 private:
 	//time at started

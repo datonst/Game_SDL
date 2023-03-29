@@ -46,6 +46,7 @@ public:
 
     void setTimeGame();
     int renderTimeGame(SDL_Window* g_window, SDL_Renderer* g_renderer, SDL_Texture* background, Audio& audio_game, const bool& check_win);
+    void resumeTime(int const& x) { reset_time += x; }
 
     void setMoney(int const& money,SDL_Renderer* g_renderer);
     void setNumberMoney(int const&x) {}

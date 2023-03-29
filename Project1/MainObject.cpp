@@ -563,7 +563,7 @@ bool MainO::check_run_over(SDL_Window* g_window, SDL_Renderer* g_renderer, SDL_T
 		if (ret_menu == 1) {
 			return true;
 		}
-		if (ret_menu == 2) dinosaur(g_renderer);
+		else if (ret_menu == 2) dinosaur(g_renderer);
 		else if (ret_menu == 3) wolf(g_renderer);
 		rectObject.x = 0;
 		rectObject.y = 0;

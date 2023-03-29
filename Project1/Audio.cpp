@@ -123,6 +123,8 @@ void Audio::changeVolume(const int& volume) {
 		Mix_VolumeChunk(bomb, 0);
 		Mix_VolumeChunk(amo_left, 0);
 		Mix_VolumeChunk(amo_right, 0);
+		Mix_VolumeChunk(collect_money, 0);
+		Mix_VolumeChunk(add_heart, 0);
 	}
 	else if (volume == 2) {
 		Mix_ResumeMusic();
@@ -130,6 +132,8 @@ void Audio::changeVolume(const int& volume) {
 		Mix_VolumeChunk(bomb, MIX_MAX_VOLUME / 4);
 		Mix_VolumeChunk(amo_left, MIX_MAX_VOLUME / 4);
 		Mix_VolumeChunk(amo_right, MIX_MAX_VOLUME / 4);
+		Mix_VolumeChunk(collect_money, MIX_MAX_VOLUME / 4);
+		Mix_VolumeChunk(add_heart, MIX_MAX_VOLUME / 4);
 	}
 	else if (volume == 1) {
 		Mix_ResumeMusic();
@@ -137,6 +141,8 @@ void Audio::changeVolume(const int& volume) {
 		Mix_VolumeChunk(bomb, 3 * MIX_MAX_VOLUME / 5);
 		Mix_VolumeChunk(amo_left, 3 * MIX_MAX_VOLUME / 5);
 		Mix_VolumeChunk(amo_right, 3 * MIX_MAX_VOLUME / 5);
+		Mix_VolumeChunk(collect_money, 3 * MIX_MAX_VOLUME / 5);
+		Mix_VolumeChunk(add_heart, 3 * MIX_MAX_VOLUME / 5);
 	}
 	else if (volume == 0) {
 		Mix_ResumeMusic();
@@ -144,6 +150,8 @@ void Audio::changeVolume(const int& volume) {
 		Mix_VolumeChunk(bomb, MIX_MAX_VOLUME - 2);
 		Mix_VolumeChunk(amo_left, MIX_MAX_VOLUME - 2);
 		Mix_VolumeChunk(amo_right, MIX_MAX_VOLUME - 2);
+		Mix_VolumeChunk(collect_money, MIX_MAX_VOLUME - 2);
+		Mix_VolumeChunk(add_heart, MIX_MAX_VOLUME - 2);
 		
 	}
 }
