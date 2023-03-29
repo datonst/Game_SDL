@@ -7,7 +7,7 @@ Chọn nhân vật :
 1. Dinosaur 
 ![](https://github.com/datonst/Game_SDL/blob/bai_SDL/Project1/img/player_pw.png)
 2.Wolf![](https://github.com/datonst/Game_SDL/blob/bai_SDL/Project1/img/wolf_pw.png)
-Nếu hiện dấu TICK ![](https://github.com/datonst/Game_SDL/blob/bai_SDL/Project1/img/tick.png) 
+Nếu hiện dấu TICK ![](https://github.com/datonst/Game_SDL/blob/e927d8a4fd2d130926f145c9844e09358cc6a7ef/Project1/img/tick.png) 
 thì sẽ là thành công chọn nhân vật
 
 
@@ -18,7 +18,7 @@ Bấm nút **START** để bắt đầu
 Bấm nút **EXIT** để kết thúc game
 Có thể chỉnh âm thanh có nhỏ dần bằng cách **CLICK** vào icon LOA ![](https://github.com/datonst/Game_SDL/blob/bai_SDL/Project1/img/Volume.png) 
 
-Sử dụng mũi tên sang trái , sang phải, lên trên, xuống dưới trên bàn phím để di chuyển nhân vật.
+Sử dụng mũi tên sang trái , sang phải, lên trên, xuống dưới trên bàn phím để di chuyển nhân vật. ![](https://github.com/datonst/Game_SDL/blob/e927d8a4fd2d130926f145c9844e09358cc6a7ef/Project1/img/keyboard%20arrows.png) 
 
 
 Bấm chuột phải để đạn bắn ra là lazer ----- Bấm chuột trái đạn bắn ra là viên đạn
