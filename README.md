@@ -67,7 +67,10 @@ Nếu **WIN** thì cũng phải **EXIT** để chơi lại game
 2. Lazyfoo 
 3. Trang của SDL https://wiki.libsdl.org/
 4. Youtube các kênh khác nhau
-
+5. Các trang lấy ảnh vector :
+  https://www.shutterstock.com/vi/search/explosion?image_type=vector
+  https://www.freepik.com/search?format=search&page=2&query=explosion
+  https://www.vectorstock.com/royalty-free-vectors/go-left-vectors
 
 
 
