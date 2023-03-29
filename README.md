@@ -54,19 +54,6 @@ Nếu **WIN** thì cũng phải **EXIT** để chơi lại game
 2. Lazyfoo 
 3. Trang của SDL https://wiki.libsdl.org/
 4. Youtube các kênh khác nhau
-
-
-
-
-
-
-
-
-## Tài liệu làm GAME
-1. Website: https://phattrienphanmem123az.com/
-2. Lazyfoo 
-3. Trang của SDL https://wiki.libsdl.org/
-4. Youtube các kênh khác nhau
 5. Các trang lấy ảnh vector :
 
       https://www.shutterstock.com/vi/search/explosion?image_type=vector
