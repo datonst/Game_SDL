@@ -100,7 +100,7 @@ void Text::setTimeGame() {
 int Text::renderTimeGame(SDL_Window* g_window, SDL_Renderer* g_renderer, SDL_Texture* background, Audio& audio_game, const bool &check_win) {
     int rt = 0;
     if(check_win==false) time_val = SDL_GetTicks() / 1000 - reset_time;
-    val_time = 300 - time_val;
+    val_time = 200 - time_val;
     if (val_time <= 0) {
         bool ret_game_over = Menu::game_over(g_renderer, audio_game);
         if (ret_game_over == false) return false;

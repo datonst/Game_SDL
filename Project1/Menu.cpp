@@ -3,6 +3,10 @@
 
 int Menu::showMenu(SDL_Renderer* renderer, SDL_Texture* g_menu, Audio& audio_game)
 {
+	baseObject start_menu;
+	start_menu.setColorKey(0, 0, 0);
+	start_menu.loadTextureObject("img//home.png", renderer);
+	start_menu.setRectObject(20, 20, 81, 82);
 	g_menu = SDL_CF::loadTexture("img//continue_menu.jpg",renderer,255,255,255);
 	if (g_menu == NULL)
 	{
@@ -82,6 +86,9 @@ int Menu::showMenu(SDL_Renderer* renderer, SDL_Texture* g_menu, Audio& audio_gam
 				if (CheckFocusWithRect(xm, ym, audio_game.getRectImageVolume())) {
 					audio_game.runVolume();
 				}
+				if (CheckFocusWithRect(xm, ym, start_menu.getRectObject())) {
+					return showMenuStart(renderer,g_menu,audio_game);
+				}
 			}
 			break;
 			case SDL_KEYDOWN:
@@ -97,6 +104,7 @@ int Menu::showMenu(SDL_Renderer* renderer, SDL_Texture* g_menu, Audio& audio_gam
 		{
 			text_menu[i].renderText(renderer);
 		}
+		start_menu.renderObject(renderer);
 		audio_game.renderImageVolume(renderer);
 		SDL_RenderPresent(renderer);
 	}

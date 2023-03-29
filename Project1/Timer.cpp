@@ -71,3 +71,14 @@ bool ImpTimer::is_paused()
 {
     return is_paused_;
 }
+
+void ImpTimer::fps() {
+    int real_timer = get_ticks();
+    int time_one_frame = 1000 / 25;
+    if (real_timer < time_one_frame) {
+        int delay = time_one_frame - real_timer;
+        if (delay > 0) {
+            SDL_Delay(delay);
+        }
+    }
+}

@@ -89,13 +89,21 @@ int main()
 						if (ret_menu == 1) {
 							return 0;
 						}
-						if (ret_menu == 2) human.dinosaur(g_renderer);
+						else if (ret_menu == 2) human.dinosaur(g_renderer);
 						else if (ret_menu == 3) human.wolf(g_renderer);
 						Bottom::bottom_start_menu(g_window, g_renderer, background, human, tx, time_game, list_bear);
 					}
 					else {
+						ImpTimer pause;
+						pause.start();
 						int ret_menu = Menu::showMenu(g_renderer, background, audio_game);
 						if (ret_menu == 1) return 0;
+						else if (ret_menu == 0) time_game.resumeTime(pause.get_ticks() / 1000);
+						else {
+							if (ret_menu == 2) { human.dinosaur(g_renderer); }
+							else if (ret_menu == 3) human.wolf(g_renderer);
+							Bottom::bottom_start_menu(g_window, g_renderer, background, human, tx, time_game, list_bear);
+						}
 					}
 				}
 			}
@@ -103,8 +111,16 @@ int main()
 			case SDL_KEYDOWN:
 				if (g_even.key.keysym.sym == SDLK_ESCAPE)
 				{
+					ImpTimer pause;
+					pause.start();
 					int ret_menu = Menu::showMenu(g_renderer, background,audio_game);
 					if (ret_menu == 1) return 0;
+					else if (ret_menu == 0) time_game.resumeTime(pause.get_ticks() / 1000);
+					else {
+						if (ret_menu == 2) { human.dinosaur(g_renderer); }
+						else if (ret_menu == 3) human.wolf(g_renderer);
+						Bottom::bottom_start_menu(g_window, g_renderer, background, human, tx, time_game, list_bear);
+					}
 				}
 			default:
 				break;
@@ -151,14 +167,7 @@ int main()
 			continue;
 		}
 		//process timer
-		int real_timer = fps_time.get_ticks();
-		int time_one_frame = 1000 / 25;
-		if (real_timer < time_one_frame) {
-			int delay = time_one_frame - real_timer;
-			if (delay > 0) {
-				SDL_Delay(delay);
-			}
-		}
+		fps_time.fps();
 	}
 
 	SDL_CF::quitSDL(g_window, g_renderer);
