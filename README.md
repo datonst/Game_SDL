@@ -16,6 +16,12 @@ thì sẽ là thành công chọn nhân vật
 
 Bấm nút **START** để bắt đầu
 Bấm nút **EXIT** để kết thúc game
+
+
+
+
+
+
 Có thể chỉnh âm thanh có nhỏ dần bằng cách **CLICK** vào icon LOA ![](https://github.com/datonst/Game_SDL/blob/bai_SDL/Project1/img/Volume.png) 
 
 Sử dụng mũi tên sang trái , sang phải, lên trên, xuống dưới trên bàn phím để di chuyển nhân vật. ![](https://github.com/datonst/Game_SDL/blob/e927d8a4fd2d130926f145c9844e09358cc6a7ef/Project1/img/keyboard%20arrows.png) 
