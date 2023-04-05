@@ -17,39 +17,38 @@ void Bottom::initBear(std::vector<threatObject*>& list_bear, SDL_Renderer* g_ren
 	}
 }
 void Bottom::bottom_start_menu(SDL_Window* g_window, SDL_Renderer* g_renderer, SDL_Texture* background, MainO& human, gameMap& tx, Text& time_game, std::vector<threatObject*>& list_bear) {
-
 	background = SDL_CF::loadTexture("img//background.png", g_renderer, 167, 175, 180);
 	SDL_RenderCopy(g_renderer, background, NULL, NULL);
 	human.resetHuman(g_renderer);
 	tx.loadMap("map//map01.dat");
 	tx.loadMapTiles(g_renderer);
 	tx.set_startMap_XY(0, 0);
-	
 	time_game.resetTime(SDL_GetTicks() / 1000);
 	initBear(list_bear, g_renderer);
 }
 
 bool Crash::Crash_Object(SDL_Window* g_window, SDL_Renderer* g_renderer, SDL_Texture* background, MainO& human, Map& ga_map, Explosion & exp, std::vector<threatObject*>& list_bear, Audio& audio_game) {
+	SDL_Rect locate_human = human.getRectObject();
 	for (int i = 0; i < list_bear.size(); i++) {
-		if (list_bear.size() == 0) return false;
+		if (list_bear.size() <= 0) return false;
 		list_bear.at(i)->set_startMap(ga_map.start_x_, ga_map.start_y_);
 		list_bear.at(i)->Renderer_threatO(ga_map, g_renderer);
-
+		SDL_Rect locate_bear= list_bear.at(i)->getRectObject();
 		//check vat_can crash human
-		if (is_crash(list_bear.at(i)->getRectObject(), human.getRectObject()) == true) {
-			exp.getRect_x_y_explosion(list_bear.at(i)->getRectObject().x, list_bear.at(i)->getRectObject().y);
+		if (is_crash(locate_bear, locate_human) == true) {
+			exp.getRect_x_y_explosion(locate_bear.x, locate_bear.y);
 			audio_game.playSoundBomb();
 			exp.renderExplosion(g_renderer);
 			if (human.crash_object_over(g_window, g_renderer, background,audio_game)) return true;
 			delete list_bear.at(i);
 			list_bear.at(i) = NULL;
 			list_bear.erase(list_bear.begin() + i);
+			if (list_bear.size() <= 0) return false;
 			if (human.get_number_die() <= 0) return false;
-			if (list_bear.size() == 0) return false;
 		}
 		//check vat_can_amo to human
-		if (is_crash(list_bear.at(i)->dan_T_one()->getRectObject(), human.getRectObject()) == true) {
-			exp.getRect_x_y_explosion(human.getRectObject().x, human.getRectObject().y);
+		if (is_crash(list_bear.at(i)->dan_T_one()->getRectObject(), locate_human) == true) {
+			exp.getRect_x_y_explosion(locate_human.x, locate_human.y);
 			audio_game.playSoundBomb();
 			exp.renderExplosion(g_renderer);
 			if (human.crash_object_over(g_window, g_renderer, background,audio_game)) return true;
@@ -59,17 +58,21 @@ bool Crash::Crash_Object(SDL_Window* g_window, SDL_Renderer* g_renderer, SDL_Tex
 		}
 		// check human_amo to vat_can
 		for (int j = 0; j < human.GetlistAmop().size(); j++) {
-			if (is_crash(list_bear.at(i)->getRectObject(), human.GetlistAmop().at(j)->getRectObject())) {
-				exp.getRect_x_y_explosion(list_bear.at(i)->getRectObject().x, list_bear.at(i)->getRectObject().y);
+			if (list_bear.size() <= 0) return false;
+			SDL_Rect locate_bear = list_bear.at(i)->getRectObject();
+			SDL_Rect human_amo= human.GetlistAmop().at(j)->getRectObject();
+			if (is_crash(locate_bear, human_amo)) {
+				if (list_bear.size() <= 0) return false;
+				exp.getRect_x_y_explosion(locate_bear.x, locate_bear.y);
 				audio_game.playSoundBomb();
 				exp.renderExplosion(g_renderer);
+				delete list_bear.at(i);
+				if (list_bear.size() <= 0) return false;
+				list_bear.erase(list_bear.begin() + i);
+				if (list_bear.size() <= 0) return false;
+				if (human.get_number_die() <= 0) return false;
 				human.add_score(100);
 				human.delete_amo_object(j);
-				delete list_bear.at(i);
-				list_bear.at(i) = NULL;
-				list_bear.erase(list_bear.begin() + i);
-				if (list_bear.size() == 0) return false;
-				if (human.get_number_die() <= 0) return false;
 			}
 		}
 	}
@@ -98,4 +101,7 @@ bool Crash::is_crash(const SDL_Rect& obj1, const SDL_Rect& obj2) {
 
 	return false;
 }
+
+
+
 

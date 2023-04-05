@@ -7,9 +7,11 @@
 #define STATE_MONEY 7
 #define STATE_BOMB 24
 #define STATE_AID 23
+#define STATE_UP_SPEED 25
+#define STATE_DOWN_SPEED 26
 static const int MAX_MAP_X = 206;
 static const int MAX_MAP_Y = 10;
-static const int MAX_TILES = 25;
+static const int MAX_TILES = 27;
 
 class TileMap : public baseObject {
 public:

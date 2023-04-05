@@ -18,6 +18,10 @@ public:
         BLACK_TEXT = 2,
         ORANGE_TEXT = 3,
         BLUE_TEXT = 4,
+        PUPLE_TEXT = 5,
+        YELLOW_TEXT = 6,
+        PINK_TEXT = 7,
+        GREEN_TEXT = 8
     };
 
     bool loadFromRenderText(TTF_Font* font, SDL_Renderer* screen);
@@ -45,7 +49,7 @@ public:
 
 
     void setTimeGame();
-    int renderTimeGame(SDL_Window* g_window, SDL_Renderer* g_renderer, SDL_Texture* background, Audio& audio_game, const bool& check_win);
+    int renderTimeGame(SDL_Window* g_window, SDL_Renderer* g_renderer, SDL_Texture* background, Audio& audio_game, const bool& check_win, const int&score, const int &money);
     void resumeTime(int const& x) { reset_time += x; }
 
     void setMoney(int const& money,SDL_Renderer* g_renderer);
@@ -60,6 +64,9 @@ public:
     void setGameOver(SDL_Renderer* g_renderer);
     void setMenu(SDL_Renderer* g_renderer);
     void renderText(SDL_Renderer* g_renderer);
+
+    void setCountSpeed(int const& count_speed, SDL_Renderer* g_renderer);
+    void changeCountSpeed(int const& count_speed, SDL_Renderer* g_renderer);
 
 private:
     std::string str_val_;

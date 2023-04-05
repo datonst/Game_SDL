@@ -34,6 +34,8 @@ MainO::MainO() {
 	player_images.right = "img//dinosaur_right.png";
 	player_images.jump_left = "img//dinosaur_jump_left.png";
 	player_images.jump_right = "img//dinosaur_jump_right.png";
+	start_count_speed = 1000000;
+	restore_heart = 1000000;
 };
 
 void  MainO::set_clip() {
@@ -172,6 +174,8 @@ void MainO::move_mainO(SDL_Event &event, SDL_Renderer* renderer_mainO, Audio& au
 };
 
 
+
+
 void MainO::Renderer_mainO(Map&  map_data,SDL_Renderer* renderer_mainO, Audio& audio_game) {
 	if (number_die <= 0) return;
 	change_map(map_data, renderer_mainO,audio_game);
@@ -242,22 +246,37 @@ void MainO::change_map(Map& map_data, SDL_Renderer* g_renderer, Audio& audio_gam
 				audio_game.playSoundAddHeart();
 			}
 			else if (map_data.tile[y1][x2] == STATE_BOMB) {
-				number_die--;
-				map_data.tile[y1][x2] = 0;
-				delete  heart[heart.size() - 1];
-				heart[heart.size() - 1] = NULL;
-				heart.pop_back();
 				bool t_exp = exp.loadTextureObject("img//exp3.png", g_renderer);
 				if (t_exp != NULL) {
 					exp.getRect_x_y_explosion(rectObject.x, rectObject.y);
 					audio_game.playSoundBomb();
 					exp.renderExplosion(g_renderer);
 				}
+				map_data.tile[y1][x2] = 0;
+				int t = SDL_GetTicks() / 1000 - restore_heart;
+				if (t >= 0 && t <= 5) return;
+				number_die--;
+				delete  heart[heart.size() - 1];
+				heart[heart.size() - 1] = NULL;
+				heart.pop_back();
+				restore();
 				if (number_die <= 0) return;
-				come_back_time = 60;
+				come_back_time = 120;
 				rectObject.x -= TILE_SIZE;
 				rectObject.y = 0;
 			}
+			else if (map_data.tile[y1][x2] == STATE_UP_SPEED) {
+				RUN_X = 15;
+				map_data.tile[y1][x2] = 0;
+				time_speed(audio_game);
+			}
+			else if (map_data.tile[y1][x2] == STATE_DOWN_SPEED) {
+				RUN_X = 5;
+				map_data.tile[y1][x2] = 0;
+				time_speed(audio_game);
+			}
+
+
 			if (map_data.tile[y2][x2] == STATE_MONEY) { 
 				map_data.tile[y2][x2] = 0;
 				gain_money++;
@@ -270,23 +289,39 @@ void MainO::change_map(Map& map_data, SDL_Renderer* g_renderer, Audio& audio_gam
 				audio_game.playSoundAddHeart();
 			}
 			else if (map_data.tile[y2][x2] == STATE_BOMB) {
-				number_die--;
-				map_data.tile[y2][x2] = 0;
-				delete  heart[heart.size() - 1];
-				heart[heart.size() - 1] = NULL;
-				heart.pop_back();
+
 				bool t_exp = exp.loadTextureObject("img//exp3.png", g_renderer);
 				if (t_exp != NULL) {
 					exp.getRect_x_y_explosion(rectObject.x, rectObject.y);
 					audio_game.playSoundBomb();
 					exp.renderExplosion(g_renderer);
 				}
+				map_data.tile[y2][x2] = 0;
+				int t = SDL_GetTicks() / 1000 - restore_heart;
+				if (t >= 0 && t <= 5) return;
+				number_die--;
+				delete  heart[heart.size() - 1];
+				heart[heart.size() - 1] = NULL;
+				heart.pop_back();
+				restore();
 				if (number_die <= 0) return;
-				come_back_time = 60;
+				come_back_time = 120;
 
 				rectObject.x -= TILE_SIZE;
 				rectObject.y = 0;
 			}
+			else if (map_data.tile[y2][x2] == STATE_UP_SPEED) {
+				RUN_X = 15;
+				map_data.tile[y2][x2] = 0;
+				time_speed(audio_game);
+			}
+			else if (map_data.tile[y2][x2] == STATE_DOWN_SPEED) {
+				RUN_X = 5;
+				map_data.tile[y2][x2] = 0;
+				time_speed(audio_game);
+			}
+
+
 			if (map_data.tile[y1][x2] != 0 || map_data.tile[y2][x2] != 0) {
 				check.right = false;
 				plus_x = 0;
@@ -304,21 +339,36 @@ void MainO::change_map(Map& map_data, SDL_Renderer* g_renderer, Audio& audio_gam
 				audio_game.playSoundAddHeart();
 			}
 			else if (map_data.tile[y1][x1] == STATE_BOMB) {
-				number_die--;
-				delete  heart[heart.size() - 1];
-				heart[heart.size() - 1] = NULL;
-				heart.pop_back();
 				bool t_exp = exp.loadTextureObject("img//exp3.png", g_renderer);
 				if (t_exp != NULL) {
 					exp.getRect_x_y_explosion(rectObject.x, rectObject.y);
 					audio_game.playSoundBomb();
 					exp.renderExplosion(g_renderer);
 				}
+				map_data.tile[y1][x1] = 0;
+				int t = SDL_GetTicks() / 1000 - restore_heart;
+				if (t >= 0 && t <= 5) return;
+				number_die--;
+				delete  heart[heart.size() - 1];
+				heart[heart.size() - 1] = NULL;
+				heart.pop_back();
+				restore();
 				if (number_die <= 0) return;
-				come_back_time = 60;
+				come_back_time = 120;
 				rectObject.x -= TILE_SIZE;
 				rectObject.y = 0;
 			}
+			else if (map_data.tile[y1][x1] == STATE_UP_SPEED) {
+				RUN_X = 15;
+				map_data.tile[y1][x1] = 0;
+				time_speed(audio_game);
+			}
+			else if (map_data.tile[y1][x1] == STATE_DOWN_SPEED) {
+				RUN_X = 5;
+				map_data.tile[y1][x1] = 0;
+				time_speed(audio_game);
+			}
+
 			if (map_data.tile[y2][x1] == STATE_MONEY) { 
 				map_data.tile[y2][x1] = 0;
 				gain_money++;
@@ -330,22 +380,36 @@ void MainO::change_map(Map& map_data, SDL_Renderer* g_renderer, Audio& audio_gam
 				audio_game.playSoundAddHeart();
 			}
 			else if (map_data.tile[y2][x1] == STATE_BOMB) {
-				number_die--;
-				map_data.tile[y2][x1] = 0;
-				delete  heart[heart.size() - 1];
-				heart[heart.size() - 1] = NULL;
-				heart.pop_back();
 				bool t_exp = exp.loadTextureObject("img//exp3.png", g_renderer);
 				if (t_exp != NULL) {
 					exp.getRect_x_y_explosion(rectObject.x, rectObject.y);
 					audio_game.playSoundBomb();
 					exp.renderExplosion(g_renderer);
 				}
+				map_data.tile[y2][x1] = 0;
+				int t = SDL_GetTicks() / 1000 - restore_heart;
+				if (t >= 0 && t <= 5) return;
+				number_die--;
+				delete  heart[heart.size() - 1];
+				heart[heart.size() - 1] = NULL;
+				heart.pop_back();
+				restore();
 				if (number_die <= 0) return;
-				come_back_time = 60;
+				come_back_time = 120;
 				rectObject.x -= TILE_SIZE;
 				rectObject.y = 0;
 			}
+			else if (map_data.tile[y2][x1] == STATE_UP_SPEED) {
+				RUN_X = 15;
+				map_data.tile[y2][x1] = 0;
+				time_speed(audio_game);
+			}
+			else if (map_data.tile[y2][x1] == STATE_DOWN_SPEED) {
+				RUN_X = 5;
+				map_data.tile[y2][x1] = 0;
+				time_speed(audio_game);
+			}
+
 			if (map_data.tile[y1][x1] != 0 || map_data.tile[y2][x1] != 0) {
 				check.left = false;
 				plus_x = 0;
@@ -375,21 +439,37 @@ void MainO::change_map(Map& map_data, SDL_Renderer* g_renderer, Audio& audio_gam
 				audio_game.playSoundAddHeart();
 			}
 			else if (map_data.tile[y1][x1] == STATE_BOMB) {
-				map_data.tile[y1][x1] = 0;
-				delete  heart[heart.size() - 1];
-				heart[heart.size() - 1] = NULL;
-				heart.pop_back();
 				bool t_exp = exp.loadTextureObject("img//exp3.png", g_renderer);
 				if (t_exp != NULL) {
 					exp.getRect_x_y_explosion(rectObject.x, rectObject.y);
 					audio_game.playSoundBomb();
 					exp.renderExplosion(g_renderer);
 				}
+				map_data.tile[y1][x1] = 0;
+				int t = SDL_GetTicks() / 1000 - restore_heart;
+				if (t >= 0 && t <= 5) return;
+				number_die--;
+				delete  heart[heart.size() - 1];
+				heart[heart.size() - 1] = NULL;
+				heart.pop_back();
+				restore();
 				if (number_die <= 0) return;
-				come_back_time = 60;
+				come_back_time = 120;
 				rectObject.x -= TILE_SIZE;
 				rectObject.y = 0;
 			}
+			else if (map_data.tile[y1][x1] == STATE_UP_SPEED) {
+				RUN_X = 15;
+				map_data.tile[y1][x1] = 0;
+				time_speed(audio_game);
+			}
+			else if (map_data.tile[y1][x1] == STATE_DOWN_SPEED) {
+				RUN_X = 5;
+				map_data.tile[y1][x1] = 0;
+				time_speed(audio_game);
+			}
+
+
 			if (map_data.tile[y1][x2] == STATE_MONEY) {
 				map_data.tile[y1][x2] = 0;
 				gain_money++;
@@ -401,21 +481,34 @@ void MainO::change_map(Map& map_data, SDL_Renderer* g_renderer, Audio& audio_gam
 				audio_game.playSoundAddHeart();
 			}
 			else if (map_data.tile[y1][x2] == STATE_BOMB) {
-				number_die--;
-				map_data.tile[y1][x2] = 0;
-				delete  heart[heart.size() - 1];
-				heart[heart.size() - 1] = NULL;
-				heart.pop_back();
 				bool t_exp = exp.loadTextureObject("img//exp3.png", g_renderer);
 				if (t_exp != NULL) {
 					exp.getRect_x_y_explosion(rectObject.x, rectObject.y);
 					audio_game.playSoundBomb();
 					exp.renderExplosion(g_renderer);
 				}
+				map_data.tile[y1][x2] = 0;
+				int t = SDL_GetTicks() / 1000 - restore_heart;
+				if (t >= 0 && t <= 5) return;
+				number_die--;
+				delete  heart[heart.size() - 1];
+				heart[heart.size() - 1] = NULL;
+				heart.pop_back();
+				restore();
 				if (number_die <= 0) return;
-				come_back_time = 60;
+				come_back_time = 120;
 				rectObject.x -= TILE_SIZE;
 				rectObject.y = 0;
+			}
+			else if (map_data.tile[y1][x2] == STATE_UP_SPEED) {
+				RUN_X = 15;
+				map_data.tile[y1][x2] = 0;
+				time_speed(audio_game);
+			}
+			else if (map_data.tile[y1][x2] == STATE_DOWN_SPEED) {
+				RUN_X = 5;
+				map_data.tile[y1][x2] = 0;
+				time_speed(audio_game);
 			}
 
 			if (map_data.tile[y1][x1] != 0 || map_data.tile[y1][x2] != 0) {
@@ -437,23 +530,37 @@ void MainO::change_map(Map& map_data, SDL_Renderer* g_renderer, Audio& audio_gam
 				audio_game.playSoundAddHeart();
 			}
 			else if (map_data.tile[y2][x1] == STATE_BOMB) {
-				number_die--;
-				map_data.tile[y2][x1] = 0;
-				delete  heart[heart.size() - 1];
-				heart[heart.size() - 1] = NULL;
-				heart.pop_back();
 				bool t_exp = exp.loadTextureObject("img//exp3.png", g_renderer);
 				if (t_exp != NULL) {
 					exp.getRect_x_y_explosion(rectObject.x, rectObject.y);
 					audio_game.playSoundBomb();
 					exp.renderExplosion(g_renderer);
 				}
+				map_data.tile[y2][x1] = 0;
+				int t = SDL_GetTicks() / 1000 - restore_heart;
+				if (t >= 0 && t <= 5) return;
+				number_die--;
+				delete  heart[heart.size() - 1];
+				heart[heart.size() - 1] = NULL;
+				heart.pop_back();
+				restore();
 				if (number_die <= 0) return;
-				come_back_time = 60;
+				come_back_time = 120;
 				rectObject.x -= TILE_SIZE;
 				rectObject.y = 0;
 
 			}
+			else if (map_data.tile[y2][x1] == STATE_UP_SPEED) {
+				RUN_X = 15;
+				map_data.tile[y2][x1] = 0;
+				time_speed(audio_game);
+			}
+			else if (map_data.tile[y2][x1] == STATE_DOWN_SPEED) {
+				RUN_X = 5;
+				map_data.tile[y2][x1] = 0;
+				time_speed(audio_game);
+			}
+
 			if (map_data.tile[y2][x2] == STATE_MONEY) { 
 				map_data.tile[y2][x2] = 0; 
 				gain_money++;
@@ -465,22 +572,36 @@ void MainO::change_map(Map& map_data, SDL_Renderer* g_renderer, Audio& audio_gam
 				audio_game.playSoundAddHeart();
 			}
 			else if (map_data.tile[y2][x2] == STATE_BOMB) {
-				map_data.tile[y2][x2] = 0;
-				number_die--;
-				delete  heart[heart.size() - 1];
-				heart[heart.size() - 1] = NULL;
-				heart.pop_back();
 				bool t_exp = exp.loadTextureObject("img//exp3.png", g_renderer);
 				if (t_exp != NULL) {
 					exp.getRect_x_y_explosion(rectObject.x, rectObject.y);
 					audio_game.playSoundBomb();
 					exp.renderExplosion(g_renderer);
 				}
+				map_data.tile[y2][x2] = 0;
+				int t = SDL_GetTicks() / 1000 - restore_heart;
+				if (t >= 0 && t <= 5) return;
+				number_die--;
+				delete  heart[heart.size() - 1];
+				heart[heart.size() - 1] = NULL;
+				heart.pop_back();
+				restore();
 				if (number_die <= 0) return;
-				come_back_time = 60;
+				come_back_time = 120;
 				rectObject.x -= TILE_SIZE;
 				rectObject.y = 0;
 			}
+			else if (map_data.tile[y2][x2] == STATE_UP_SPEED) {
+				RUN_X = 15;
+				map_data.tile[y2][x2] = 0;
+				time_speed(audio_game);
+			}
+			else if (map_data.tile[y2][x2] == STATE_DOWN_SPEED) {
+				RUN_X = 5;
+				map_data.tile[y2][x2] = 0;
+				time_speed(audio_game);
+			}
+
 			if (map_data.tile[y2][x1] != 0 || map_data.tile[y2][x2] != 0) {
 				check.down = false;
 				plus_y = 0;
@@ -498,11 +619,12 @@ void MainO::change_map(Map& map_data, SDL_Renderer* g_renderer, Audio& audio_gam
 	rectObject.y += plus_y;
 	if (rectObject.y > map_data.max_y_) {
 		number_die--;
+		restore();
 		delete  heart[heart.size() - 1];
 		heart[heart.size() - 1] = NULL;
 		heart.pop_back();
 		if (number_die == 0) return;
-		come_back_time = 60;
+		come_back_time = 120;
 		rectObject.x -= 4 * TILE_SIZE;
 		rectObject.y = 0;
 
@@ -559,7 +681,7 @@ bool MainO::check_run_over(SDL_Window* g_window, SDL_Renderer* g_renderer, SDL_T
 		bool ret_game_over = Menu::game_over(g_renderer,audio_game);
 		if (ret_game_over == false) return false;
 		SDL_RenderPresent(g_renderer);
-		int ret_menu = Menu::showMenuStart(g_renderer, background,audio_game);
+		int ret_menu = Menu::showMenuStart(g_renderer, background,audio_game,score,gain_money);
 		if (ret_menu == 1) {
 			return true;
 		}
@@ -578,13 +700,16 @@ bool MainO::check_run_over(SDL_Window* g_window, SDL_Renderer* g_renderer, SDL_T
 }
 
 bool MainO::crash_object_over(SDL_Window* g_window, SDL_Renderer* g_renderer, SDL_Texture* background, Audio& audio_game) {
+	int t = SDL_GetTicks() / 1000 - restore_heart;
+	if (t >= 0 && t <= 5) return false;
 	number_die--;
 	delete  heart[heart.size() - 1];
 	heart[heart.size() - 1] = NULL;
 	heart.pop_back();
+	restore();
 	if (check_run_over(g_window, g_renderer, background,audio_game)) return true;
 	if (number_die > 0) {
-		come_back_time = 60;
+		come_back_time = 120;
 		rectObject.x -= TILE_SIZE;
 		rectObject.y = 0;
 	}
@@ -664,4 +789,15 @@ void MainO::wolf(SDL_Renderer* g_renderer) {
 	player_images.jump_left = "img//wolf_jump_left.png";
 	player_images.jump_right = "img//wolf_jump_right.png";
 	loadTextureObject(player_images.right, g_renderer);
+}
+
+void MainO::time_speed(Audio& audio_game) {
+	if (check.left == true) plus_x = -abs(RUN_X);
+	else if (check.right == true) plus_x = abs(RUN_X);
+	audio_game.playSoundAddHeart();
+	start_count_speed = SDL_GetTicks()/1000;
+}
+
+void MainO::restore() {
+	restore_heart= SDL_GetTicks() / 1000;
 }
