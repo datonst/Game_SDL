@@ -70,6 +70,26 @@ void Text::setColor(int type)
         SDL_Color color = { 52, 179, 241 };
         text_color_ = color;
     }
+    else if (type == PUPLE_TEXT)
+    {
+        SDL_Color color = { 128, 0,128 };
+        text_color_ = color;
+    }
+    else if (type == YELLOW_TEXT)
+    {
+        SDL_Color color = { 255, 255, 0 };
+        text_color_ = color;
+    }
+    else if (type == PINK_TEXT)
+    {
+        SDL_Color color = { 255, 192, 203 };
+        text_color_ = color;
+    }
+    else if (type == GREEN_TEXT)
+    {
+        SDL_Color color = { 0, 255,0 };
+        text_color_ = color;
+    }
 }
 
 void Text::rendererText(SDL_Renderer* screen,
@@ -97,7 +117,7 @@ void Text::setTimeGame() {
     text.y = 15;
 }
 
-int Text::renderTimeGame(SDL_Window* g_window, SDL_Renderer* g_renderer, SDL_Texture* background, Audio& audio_game, const bool &check_win) {
+int Text::renderTimeGame(SDL_Window* g_window, SDL_Renderer* g_renderer, SDL_Texture* background, Audio& audio_game, const bool &check_win, const int& score, const int& money) {
     int rt = 0;
     if(check_win==false) time_val = SDL_GetTicks() / 1000 - reset_time;
     val_time = 200 - time_val;
@@ -105,7 +125,7 @@ int Text::renderTimeGame(SDL_Window* g_window, SDL_Renderer* g_renderer, SDL_Tex
         bool ret_game_over = Menu::game_over(g_renderer, audio_game);
         if (ret_game_over == false) return false;
         SDL_RenderPresent(g_renderer);
-        int ret_menu = Menu::showMenuStart(g_renderer, background,audio_game);
+        int ret_menu = Menu::showMenuStart(g_renderer, background,audio_game,score,money);
         if (ret_menu == 1) {
             return true;
         }
@@ -183,5 +203,21 @@ void Text::setExit(SDL_Renderer* g_renderer) {
     text.x = SDL_CF::SCREEN_WIDTH - 100;
     text.y = SDL_CF::SCREEN_HEIGHT - 100;
     setColor(Text::BLACK_TEXT);
+    renderText(g_renderer);
+}
+
+
+void Text::setCountSpeed(int const& count_speed, SDL_Renderer* g_renderer){
+    font = TTF_OpenFont("font//count_speed.ttf", 150);
+    if (font == NULL) return;
+    std::string str_score =std::to_string(count_speed);
+    setText(str_score);
+    text.x = SDL_CF::SCREEN_WIDTH -200;
+    text.y = 100;
+    setColor(7);
+}
+void Text::changeCountSpeed(int const& count_speed, SDL_Renderer* g_renderer) {
+    std::string str_score =std::to_string(count_speed);
+    setText(str_score);
     renderText(g_renderer);
 }

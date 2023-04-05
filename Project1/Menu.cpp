@@ -1,7 +1,7 @@
 ﻿#include "Menu.h"
 
 
-int Menu::showMenu(SDL_Renderer* renderer, SDL_Texture* g_menu, Audio& audio_game)
+int Menu::showMenu(SDL_Renderer* renderer, SDL_Texture* g_menu, Audio& audio_game, const int& score, const int& money)
 {
 	baseObject start_menu;
 	start_menu.setColorKey(0, 0, 0);
@@ -87,7 +87,7 @@ int Menu::showMenu(SDL_Renderer* renderer, SDL_Texture* g_menu, Audio& audio_gam
 					audio_game.runVolume();
 				}
 				if (CheckFocusWithRect(xm, ym, start_menu.getRectObject())) {
-					return showMenuStart(renderer,g_menu,audio_game);
+					return showMenuStart(renderer,g_menu,audio_game,score,money);
 				}
 			}
 			break;
@@ -208,7 +208,8 @@ bool Menu::game_over(SDL_Renderer* renderer, Audio& audio_game) {
 }
 
 
-int Menu::showMenuStart(SDL_Renderer* renderer, SDL_Texture* g_menu, Audio& audio_game) {
+int Menu::showMenuStart(SDL_Renderer* renderer, SDL_Texture* g_menu, Audio& audio_game, const int& score, const int& money) {
+	save_game(score,money);
 	audio_game.setMusic();
 	int check = 2;
 	g_menu = SDL_CF::loadTexture("img//start_img.jpg", renderer, 0, 0, 0);
@@ -340,3 +341,17 @@ int Menu::showMenuStart(SDL_Renderer* renderer, SDL_Texture* g_menu, Audio& audi
 	return true;
 };
 
+void Menu::save_game(const int& score, const int& money) {
+	std::fstream myfile("score.txt",std::ofstream::app);
+	if (myfile.is_open()) {
+		myfile << "Score: " << std::to_string(score) << ", Money: " << std::to_string(money) << std::endl;
+		myfile.close();
+	}
+	else std::cout << "Unable to open file";
+}
+
+void Menu::clear_file(std::string path) {
+	std::fstream fs;
+	fs.open(path, std::ios::trunc);
+	fs.close();
+}

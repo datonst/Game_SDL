@@ -24,19 +24,23 @@ int main()
 	Audio audio_game;
 	if (audio_game.setAudio(g_renderer) == false) return 0;
 	SDL_Texture* background=NULL;
-	int ret_menu = Menu::showMenuStart(g_renderer, background,audio_game);
+	int ret_menu = Menu::showMenuStart(g_renderer, background,audio_game,0,0);
 	if (ret_menu == 1) return 0;
 	background = SDL_CF::loadTexture("img//background.png", g_renderer, COLOR_KEY_R, COLOR_KEY_G, COLOR_KEY_B);
 	SDL_RenderCopy(g_renderer, background, NULL, NULL);
-
+	baseObject restore_human;
+	restore_human.setColorKey(0, 0, 0);
+	restore_human.loadTextureObject("img//stars.png",g_renderer);
+	restore_human.set_w_h_rectObject(64, 64);
 	
 
-	Text time_game,text_money,text_score,text_exit;
+	Text time_game,text_money,text_score,text_exit,text_count_speed;
 	time_game.setTimeGame();
 	text_money.setMoney(0,g_renderer);
 	text_score.setScore(0,g_renderer);
 	text_exit.setExit(g_renderer);
-
+	text_count_speed.setCountSpeed(0,g_renderer);
+	
 
 	//init map
 	gameMap tx;
@@ -85,7 +89,7 @@ int main()
 				if (Menu::CheckFocusWithRect(g_even.motion.x, g_even.motion.y, text_exit.getRectText()))
 				{
 					if (human.winner() == true) {
-						int ret_menu = Menu::showMenuStart(g_renderer, background, audio_game);
+						int ret_menu = Menu::showMenuStart(g_renderer, background, audio_game,human.get_score(),human.get_money());
 						if (ret_menu == 1) {
 							return 0;
 						}
@@ -96,7 +100,7 @@ int main()
 					else {
 						ImpTimer pause;
 						pause.start();
-						int ret_menu = Menu::showMenu(g_renderer, background, audio_game);
+						int ret_menu = Menu::showMenu(g_renderer, background, audio_game,human.get_score(),human.get_money());
 						if (ret_menu == 1) return 0;
 						else if (ret_menu == 0) time_game.resumeTime(pause.get_ticks() / 1000);
 						else {
@@ -113,7 +117,7 @@ int main()
 				{
 					ImpTimer pause;
 					pause.start();
-					int ret_menu = Menu::showMenu(g_renderer, background,audio_game);
+					int ret_menu = Menu::showMenu(g_renderer, background,audio_game,human.get_score(),human.get_money());
 					if (ret_menu == 1) return 0;
 					else if (ret_menu == 0) time_game.resumeTime(pause.get_ticks() / 1000);
 					else {
@@ -129,7 +133,7 @@ int main()
 		}
 		
 		//check time
-		int check_time = time_game.renderTimeGame(g_window, g_renderer, background,audio_game,human.winner());
+		int check_time = time_game.renderTimeGame(g_window, g_renderer, background,audio_game,human.winner(),human.get_score(),human.get_money());
 		if (check_time == 1) break;
 		else if (check_time == 2) human.dinosaur(g_renderer);
 		else if (check_time == 3) human.wolf(g_renderer);
@@ -137,7 +141,14 @@ int main()
 		//renderer text
 		text_money.changeMoney(human.get_money(), g_renderer);
 		text_score.changeScore(human.get_score(), g_renderer);
-		
+		int t1 = (SDL_GetTicks() / 1000 - human.get_count_speed());
+		if (t1 >= 0 && t1 <= 10) text_count_speed.changeCountSpeed(10 - t1, g_renderer);
+		else human.resetRunX();
+		int t2 = (SDL_GetTicks() / 1000 - human.get_restore_heart());
+		if (t2 >= 0 && t2 <= 5) {
+			restore_human.set_x_y_rectObject(human.getRectObject().x, human.getRectObject().y);
+			if(human.get_come_back_time()<=0) restore_human.renderObject(g_renderer);
+		}
 
 		//process human and tile_map
 		Map ga_map = tx.getMap();

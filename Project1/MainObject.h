@@ -7,10 +7,8 @@
 #include "Amo.h"
 #include <vector>
 #include "Menu.h"
-#include "Text.h"
 #include"Explosion.h"
-#define RUN_X 10
-#define RUN_Y 3
+
 
 struct pathPlayer {
 	std::string left;
@@ -27,6 +25,8 @@ struct bottom {
 };
 class MainO : public baseObject {
 private:
+	int RUN_X = 10;
+	int RUN_Y = 3;
 	baseObject winner_object;
 	bool on_ground;
 	bool clip_chay;
@@ -51,6 +51,9 @@ private:
 	Explosion exp;
 	pathPlayer player_images;
 	int length_frame;
+	int time_speed_left;
+	int start_count_speed;
+	int restore_heart;
 public:
 	MainO();
 	~MainO();
@@ -80,5 +83,11 @@ public:
 	void dinosaur(SDL_Renderer* g_renderer);
 	void wolf(SDL_Renderer* g_renderer);
 	bool winner() const { return end_round; }
+	void time_speed(Audio& audio_game);
+	int get_count_speed() const { return start_count_speed; }
+	void resetRunX() { RUN_X = 10; }
+	void restore();
+	int get_restore_heart() const { return restore_heart; }
+	int get_come_back_time() const { return come_back_time; }
 };
 #endif
